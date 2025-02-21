@@ -68,7 +68,7 @@ const Login = () => {
                 };
     
                 try {
-                    const response = await fetch('https://edumanagebackend.vercel.app/users', {
+                    const response = await fetch('http://localhost:5000/users', {
                         method: 'POST',
                         headers: {
                             'content-type': 'application/json'
