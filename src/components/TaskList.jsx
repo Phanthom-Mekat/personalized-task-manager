@@ -43,7 +43,11 @@ function TaskList({ category, tasks, onTaskUpdate }) {
   };
 
   return (
-    <div className={`rounded-lg border ${getCategoryStyles(category)} p-4 shadow-sm`}>
+    <div 
+      className={`rounded-lg border ${getCategoryStyles(category)} p-4 shadow-sm transition-all ${
+        isOver ? "ring-2 ring-blue-400" : ""
+      }`}
+    >
       <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <ClipboardList className={`h-5 w-5 ${getHeaderColor(category)}`} />

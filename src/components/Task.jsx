@@ -7,11 +7,11 @@ import { Pencil, Trash2, Save, Grip, X } from "lucide-react"
 import swal from "sweetalert"
 import toast from "react-hot-toast"
 
-
 function Task({ task, index, onTaskUpdate }) {
   const [isEditing, setIsEditing] = useState(false)
   const [editedTitle, setEditedTitle] = useState(task.title)
   const [editedDescription, setEditedDescription] = useState(task.description)
+  const [isUpdating, setIsUpdating] = useState(false)
 
   const {
     attributes,
@@ -34,23 +34,41 @@ function Task({ task, index, onTaskUpdate }) {
   }
   
   const handleEdit = async () => {
-    if (isEditing) {
+    if (isEditing && (editedTitle !== task.title || editedDescription !== task.description)) {
+      setIsUpdating(true)
       try {
         const response = await fetch(`http://localhost:5000/tasks/${task._id}`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ title: editedTitle, description: editedDescription }),
+          credentials: 'include',
+          body: JSON.stringify({ 
+            title: editedTitle, 
+            description: editedDescription,
+            category: task.category,
+            order: task.order
+          }),
         })
+
+        if (!response.ok) {
+          throw new Error('Failed to update task')
+        }
+
         const updatedTask = await response.json()
         onTaskUpdate({ type: "update", task: updatedTask })
         toast.success("Task updated successfully!")
+        setIsEditing(false)
       } catch (error) {
         console.error("Error updating task:", error)
         toast.error("Failed to update task!")
+        // Revert to original values
+        setEditedTitle(task.title)
+        setEditedDescription(task.description)
+      } finally {
+        setIsUpdating(false)
       }
+    } else {
+      setIsEditing(!isEditing)
     }
-    setIsEditing(!isEditing)
-    
   }
 
   const handleDelete = async () => {
@@ -63,7 +81,15 @@ function Task({ task, index, onTaskUpdate }) {
     }).then(async (willDelete) => {
       if (willDelete) {
         try {
-          await fetch(`http://localhost:5000/tasks/${task._id}`, { method: "DELETE" })
+          const response = await fetch(`http://localhost:5000/tasks/${task._id}`, { 
+            method: "DELETE",
+            credentials: 'include'
+          })
+
+          if (!response.ok) {
+            throw new Error('Failed to delete task')
+          }
+
           onTaskUpdate({ type: "delete", taskId: task._id })
           swal("Task has been deleted!", { icon: "success" })
         } catch (error) {
@@ -107,6 +133,7 @@ function Task({ task, index, onTaskUpdate }) {
                 maxLength={50}
                 className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                 placeholder="Task title"
+                disabled={isUpdating}
               />
               <textarea
                 value={editedDescription}
@@ -115,6 +142,7 @@ function Task({ task, index, onTaskUpdate }) {
                 className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                 placeholder="Task description"
                 rows={3}
+                disabled={isUpdating}
               />
             </div>
           ) : (
@@ -134,6 +162,7 @@ function Task({ task, index, onTaskUpdate }) {
                 onClick={handleEdit}
                 className="rounded-full p-1 text-green-600 hover:bg-green-50"
                 title="Save"
+                disabled={isUpdating}
               >
                 <Save className="h-4 w-4" />
               </button>
@@ -141,6 +170,7 @@ function Task({ task, index, onTaskUpdate }) {
                 onClick={handleCancel}
                 className="rounded-full p-1 text-gray-600 hover:bg-gray-50"
                 title="Cancel"
+                disabled={isUpdating}
               >
                 <X className="h-4 w-4" />
               </button>
