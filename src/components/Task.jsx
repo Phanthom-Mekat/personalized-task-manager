@@ -111,14 +111,14 @@ function Task({ task, index, onTaskUpdate }) {
       ref={setNodeRef}
       style={style}
       {...attributes}
-      className={`group mb-2 rounded-lg border bg-white p-4 shadow-sm transition-all ${
+      className={`group mb-2 rounded-lg border bg-white dark:bg-gray-800 dark:border-gray-700 p-4 shadow-sm transition-all ${
         isDragging ? "rotate-2 shadow-lg opacity-50" : ""
       }`}
     >
       <div className="flex items-start gap-3">
         <div
           {...listeners}
-          className="mt-1 cursor-grab text-gray-400 hover:text-gray-600"
+          className="mt-1 cursor-grab text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
         >
           <Grip className="h-4 w-4" />
         </div>
@@ -131,25 +131,25 @@ function Task({ task, index, onTaskUpdate }) {
                 value={editedTitle}
                 onChange={(e) => setEditedTitle(e.target.value)}
                 maxLength={50}
-                className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                 placeholder="Task title"
                 disabled={isUpdating}
+                className="w-full rounded-md border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-700 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
               />
               <textarea
                 value={editedDescription}
                 onChange={(e) => setEditedDescription(e.target.value)}
                 maxLength={200}
-                className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                 placeholder="Task description"
                 rows={3}
                 disabled={isUpdating}
+                className="w-full rounded-md border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-700 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
               />
             </div>
           ) : (
             <div>
-              <h3 className="font-medium text-gray-900">{task.title}</h3>
+              <h3 className="font-medium text-gray-900 dark:text-gray-100">{task.title}</h3>
               {task.description && (
-                <p className="mt-1 text-sm text-gray-500">{task.description}</p>
+                <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">{task.description}</p>
               )}
             </div>
           )}
@@ -160,7 +160,7 @@ function Task({ task, index, onTaskUpdate }) {
             <>
               <button
                 onClick={handleEdit}
-                className="rounded-full p-1 text-green-600 hover:bg-green-50"
+                className="rounded-full p-1 text-green-600 hover:bg-green-50 dark:hover:bg-green-800"
                 title="Save"
                 disabled={isUpdating}
               >
@@ -168,7 +168,7 @@ function Task({ task, index, onTaskUpdate }) {
               </button>
               <button
                 onClick={handleCancel}
-                className="rounded-full p-1 text-gray-600 hover:bg-gray-50"
+                className="rounded-full p-1 text-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800"
                 title="Cancel"
                 disabled={isUpdating}
               >
@@ -179,14 +179,14 @@ function Task({ task, index, onTaskUpdate }) {
             <>
               <button
                 onClick={handleEdit}
-                className="rounded-full p-1 text-blue-600 hover:bg-blue-50"
+                className="rounded-full p-1 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-800"
                 title="Edit"
               >
                 <Pencil className="h-4 w-4" />
               </button>
               <button
                 onClick={handleDelete}
-                className="rounded-full p-1 text-red-600 hover:bg-red-50"
+                className="rounded-full p-1 text-red-600 hover:bg-red-50 dark:hover:bg-red-800"
                 title="Delete"
               >
                 <Trash2 className="h-4 w-4" />
