@@ -26,7 +26,7 @@ const Register = () => {
 
     const registerUserInDB = async (userData) => {
         try {
-            const response = await fetch('http://localhost:5000/users', {
+            const response = await fetch('https://personalized-task-manager-server.onrender.com/users', {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"

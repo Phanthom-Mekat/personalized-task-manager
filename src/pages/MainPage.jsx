@@ -53,7 +53,7 @@ function MainPage() {
   const fetchTasks = async () => {
     setIsLoading(true)
     try {
-      const response = await fetch(`http://localhost:5000/tasks/${user.uid}`)
+      const response = await fetch(`https://personalized-task-manager-server.onrender.com/tasks/${user.uid}`)
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`)
       }
@@ -170,7 +170,7 @@ function MainPage() {
       setActiveId(null)
 
       // Save to server
-      const response = await fetch(`http://localhost:5000/tasks/reorder/${user.uid}`, {
+      const response = await fetch(`https://personalized-task-manager-server.onrender.com/tasks/reorder/${user.uid}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ tasks: tasksToUpdate }),
@@ -198,7 +198,7 @@ function MainPage() {
 
   const addTask = async (newTask) => {
     try {
-      const response = await fetch("http://localhost:5000/tasks", {
+      const response = await fetch("https://personalized-task-manager-server.onrender.com/tasks", {
         method: "POST",
         headers: { 
           "Content-Type": "application/json",

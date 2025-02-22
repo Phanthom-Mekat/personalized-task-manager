@@ -68,7 +68,7 @@ const Login = () => {
                 };
     
                 try {
-                    const response = await fetch('http://localhost:5000/users', {
+                    const response = await fetch('https://personalized-task-manager-server.onrender.com/users', {
                         method: 'POST',
                         headers: {
                             'content-type': 'application/json'
