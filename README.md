@@ -50,7 +50,8 @@ The project relies on the following dependencies:
 - React
 - Express
 - MongoDB
-- React
+- NodeJs
+- Polling
 - TailwindCSS
 - Firebase
 - Socket.io
