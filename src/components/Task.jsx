@@ -1,5 +1,8 @@
 "use client"
 
+import { API_URL } from "../config"
+
+
 import { useState } from "react"
 import { useSortable } from "@dnd-kit/sortable"
 import { CSS } from "@dnd-kit/utilities"
@@ -37,7 +40,8 @@ function Task({ task, index, onTaskUpdate }) {
     if (isEditing && (editedTitle !== task.title || editedDescription !== task.description)) {
       setIsUpdating(true)
       try {
-        const response = await fetch(`https://personalized-task-manager-server.onrender.com/tasks/${task._id}`, {
+        const response = await fetch(`${API_URL}/tasks/${task._id}`, {
+
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           credentials: 'include',
@@ -81,7 +85,8 @@ function Task({ task, index, onTaskUpdate }) {
     }).then(async (willDelete) => {
       if (willDelete) {
         try {
-          const response = await fetch(`https://personalized-task-manager-server.onrender.com/tasks/${task._id}`, { 
+          const response = await fetch(`${API_URL}/tasks/${task._id}`, { 
+
             method: "DELETE",
             credentials: 'include'
           })

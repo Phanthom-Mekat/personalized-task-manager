@@ -1,57 +1,91 @@
-# Personalized Task Manager
+# Personalized Task Manager 🚀
 
-A personalized task manager application designed to help you organize and manage your tasks efficiently.
+A modern, intuitive, and highly interactive task management application designed to streamline your daily workflow. Organize, prioritize, and track your tasks with ease using our seamless drag-and-drop interface.
 
-## Live Links
-- [Live URL](https://personalized-taskmanager.netlify.app/)
+## 🔗 Live Links
+- **Client Application:** [Live URL](https://personalized-taskmanager.netlify.app/)
 
-## Dependencies
-The project relies on the following dependencies:
-- @dnd-kit/core: ^6.3.1
-- @dnd-kit/sortable: ^10.0.0
-- @dnd-kit/utilities: ^3.2.2
-- @tailwindcss/vite: ^4.0.7
-- aos: ^2.3.4
-- firebase: ^11.3.1
-- lottie-react: ^2.4.1
-- lucide-react: ^0.475.0
-- react: ^19.0.0
-- react-dnd: ^16.0.1
-- react-dnd-html5-backend: ^16.0.1
-- react-dom: ^19.0.0
-- react-hot-toast: ^2.5.2
-- react-icons: ^5.5.0
-- react-router-dom: ^6.29.0
-- socket.io: ^4.8.1
-- socket.io-client: ^4.8.1
-- sweetalert: ^2.1.2
-- tailwindcss: ^4.0.7
 
-## Installation Steps
-1. Clone the repository:
-    ```bash
-    git clone https://github.com/Phanthom-Mekat/personalized-task-manager.git
-    ```
-2. Navigate to the project directory:
-    ```bash
-    cd personalized-task-manager
-    ```
-3. Install the dependencies:
-    ```bash
-    npm install
-    ```
-4. Start the development server:
-    ```bash
-    npm run dev
-    ```
+---
 
-## Technologies Used
-- JS
-- React
-- Express
-- MongoDB
-- NodeJs
-- Polling
-- TailwindCSS
-- Firebase
-- Socket.io
+## ✨ Key Features
+
+- **🔐 Secure Authentication:** Seamlessly sign in with Google or create a dedicated account via Firebase Authentication.
+- **📑 Smart Categorization:** Organize tasks into three distinct stages: **To-Do**, **In Progress**, and **Done**.
+- **🖱️ Drag & Drop Interface:** Effortlessly reorder tasks within a category or move them across different stages using a smooth, interactive interface powered by `@dnd-kit`.
+- **🔄 Real-time Persistence:** Every change—whether it's adding, updating, deleting, or reordering—is instantly saved to a MongoDB database.
+- **📝 Task Details:** Add titles (up to 50 characters) and detailed descriptions (up to 200 characters) to keep your work well-documented.
+- **📱 Responsive & Modern UI:** A fully responsive design that looks stunning on desktops, tablets, and mobile devices, featuring **Dark Mode** support and optimized user experience.
+- **🔔 Interactive Feedback:** Instant notifications for every action using `react-hot-toast` and beautiful modal confirmations with `sweetalert`.
+
+---
+
+## 🛠️ Technologies Used
+
+### Frontend
+- **React.js (Vite)** - Modern UI development
+- **Tailwind CSS & DaisyUI** - Sleek, responsive styling
+- **@dnd-kit** - Powerful drag-and-drop functionality
+- **Firebase Auth** - Secure user authentication
+- **Lucide React** - High-quality iconography
+- **Axios** - Efficient API communication
+
+### Backend
+- **Node.js & Express** - Scalable server architecture
+- **MongoDB** - Robust NoSQL database for persistent storage
+- **Socket.io** - Prepared for real-time collaborative features
+- **Vercel** - High-performance backend hosting
+
+---
+
+## 🚀 Getting Started
+
+Follow these steps to get the project running locally:
+
+### 1. Clone the repository
+```bash
+git clone https://github.com/Phanthom-Mekat/personalized-task-manager.git
+cd personalized-task-manager
+```
+
+### 2. Install dependencies
+**Frontend:**
+```bash
+cd personalized-task-manager
+npm install
+```
+
+**Backend:**
+```bash
+cd personalized-task-manager-server
+npm install
+```
+
+### 3. Environment Variables
+Create a `.env` file in both directories and add the necessary credentials (MongoDB URI, Firebase Config, etc.).
+
+### 4. Run the application
+**Start Backend:**
+```bash
+# Inside personalized-task-manager-server
+npm run dev
+```
+
+**Start Frontend:**
+```bash
+# Inside personalized-task-manager
+npm run dev
+```
+
+The application will be available at `http://localhost:5173`.
+
+---
+
+## 📸 Screenshots
+*(Add your app screenshots here to showcase the UI)*
+
+---
+
+## 📄 License
+This project is licensed under the MIT License.
+

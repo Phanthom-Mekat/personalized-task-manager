@@ -1,4 +1,6 @@
+import { API_URL } from "../../config";
 import { useContext, useState } from "react";
+
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FaGoogle } from "react-icons/fa";
 import toast from "react-hot-toast";
@@ -68,7 +70,8 @@ const Login = () => {
                 };
     
                 try {
-                    const response = await fetch('https://personalized-task-manager-server.onrender.com/users', {
+                    const response = await fetch(`${API_URL}/users`, {
+
                         method: 'POST',
                         headers: {
                             'content-type': 'application/json'
@@ -76,13 +79,16 @@ const Login = () => {
                         body: JSON.stringify(saveUser)
                     });
     
-                    if (response.ok) {
+                    const data = await response.json();
+    
+                    if (response.ok || data.success) {
                         setUser(loggedUser);
                         toast.success('Signed in successfully with Google!');
                         navigate(location?.state ? location.state : "/");
                     } else {
-                        toast.error('Failed to save user data');
+                        toast.error(data.message || 'Failed to save user data');
                     }
+
                 } catch (error) {
                     toast.error('Error saving user data');
                     console.error(error);

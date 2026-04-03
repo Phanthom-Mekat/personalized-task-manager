@@ -1,4 +1,6 @@
+import { API_URL } from "../../config";
 import { Link, useNavigate } from "react-router-dom";
+
 import { useContext, useState } from "react";
 import { FaGoogle } from "react-icons/fa";
 import { Eye, EyeOff, Mail, Lock, User, Image, AlertCircle, DiamondPlus } from 'lucide-react';
@@ -26,7 +28,8 @@ const Register = () => {
 
     const registerUserInDB = async (userData) => {
         try {
-            const response = await fetch('https://personalized-task-manager-server.onrender.com/users', {
+            const response = await fetch(`${API_URL}/users`, {
+
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -37,12 +40,17 @@ const Register = () => {
             const data = await response.json();
             
             if (response.ok) {
-                toast.success("Registration successful!");
+                if (data.message === 'User already exists') {
+                    toast.success("Welcome back!");
+                } else {
+                    toast.success("Registration successful!");
+                }
                 return true;
             } else {
                 toast.error(data.message || "Registration failed");
                 return false;
             }
+
         } catch (error) {
             toast.error("Error connecting to server");
             return false;
