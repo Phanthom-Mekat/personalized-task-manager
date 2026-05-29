@@ -14,6 +14,7 @@ import {
     Lock, Unlock, Sparkles, Brain, Lightbulb, Check
 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import SkeletonLoader from '../../components/ui/SkeletonLoader';
 
 dayjs.extend(weekOfYear);
 dayjs.extend(isoWeek);
@@ -177,11 +178,8 @@ const WeeklyPlanner = () => {
 
     if (loading[`weekly-${weekKey}`] || !weeklyData) {
         return (
-            <div className="flex h-screen items-center justify-center bg-background text-foreground">
-                <div className="flex flex-col items-center gap-4">
-                    <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
-                    <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/60">Loading Command Center...</span>
-                </div>
+            <div className="p-3 sm:p-6 md:p-8 max-w-7xl mx-auto space-y-6 sm:space-y-8 md:space-y-12 min-h-screen text-foreground pb-24">
+                <SkeletonLoader type="weekly" />
             </div>
         );
     }

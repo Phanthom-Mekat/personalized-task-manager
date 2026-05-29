@@ -5,12 +5,15 @@ import { RouterProvider } from 'react-router-dom'
 import router from './router/router.jsx'
 import ThemeProvider from './provider/ThemeProvider.jsx'
 import AuthProvider from './provider/AuthProvider.jsx'
+import PlannerProvider from './provider/PlannerProvider.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <ThemeProvider>
       <AuthProvider>
-        <RouterProvider router={router} />
+        <PlannerProvider>
+          <RouterProvider router={router} />
+        </PlannerProvider>
       </AuthProvider>
     </ThemeProvider>
   </StrictMode>,

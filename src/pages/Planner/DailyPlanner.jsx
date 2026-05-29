@@ -17,6 +17,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import SkeletonLoader from '../../components/ui/SkeletonLoader';
 
 import IntentionWall from '../../components/planner/IntentionWall';
 import CompletionRing from '../../components/planner/CompletionRing';
@@ -120,8 +121,8 @@ function DailyPlanner() {
 
     if (!daily) {
         return (
-            <div className="flex items-center justify-center h-full">
-                <div className="animate-pulse text-muted-foreground">Loading...</div>
+            <div className="max-w-3xl mx-auto px-4 py-6">
+                <SkeletonLoader type="daily" />
             </div>
         );
     }

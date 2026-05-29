@@ -90,115 +90,117 @@ function PlannerSidebar() {
     return (
         <>
             {/* Desktop sidebar */}
-            <aside
-                className={`hidden md:flex flex-col border-r border-border bg-card transition-all duration-300 ${collapsed ? 'w-16' : 'w-56'
-                    }`}
-            >
-                {/* Header */}
-                <div className="flex items-center justify-between px-3 py-4 border-b border-border">
-                    {!collapsed && (
-                        <div className="flex flex-col">
-                            <span className="text-xs text-muted-foreground font-medium flex items-center gap-2">
-                                Week {weekNumber}
-                                <span className="inline-flex items-center">
-                                    {syncStatus === 'synced' && (
-                                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_#10b981] animate-pulse" title="All changes saved to cloud" />
-                                    )}
-                                    {syncStatus === 'syncing' && (
-                                        <span className="w-2 h-2 rounded-full border border-t-transparent border-primary animate-spin" title="Syncing with database..." />
-                                    )}
-                                    {syncStatus === 'offline-queued' && (
-                                        <span className="text-[8px] font-mono font-black text-amber-500 bg-amber-500/10 px-1.5 py-0.5 rounded border border-amber-500/20" title={`${outboxCount} offline changes queued`}>
-                                            {outboxCount} QUEUED
-                                        </span>
-                                    )}
+            {location.pathname.startsWith('/planner') && (
+                <aside
+                    className={`hidden md:flex flex-col border-r border-border bg-card transition-all duration-300 ${collapsed ? 'w-16' : 'w-56'
+                        }`}
+                >
+                    {/* Header */}
+                    <div className="flex items-center justify-between px-3 py-4 border-b border-border">
+                        {!collapsed && (
+                            <div className="flex flex-col">
+                                <span className="text-xs text-muted-foreground font-medium flex items-center gap-2">
+                                    Week {weekNumber}
+                                    <span className="inline-flex items-center">
+                                        {syncStatus === 'synced' && (
+                                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_#10b981] animate-pulse" title="All changes saved to cloud" />
+                                        )}
+                                        {syncStatus === 'syncing' && (
+                                            <span className="w-2 h-2 rounded-full border border-t-transparent border-primary animate-spin" title="Syncing with database..." />
+                                        )}
+                                        {syncStatus === 'offline-queued' && (
+                                            <span className="text-[8px] font-mono font-black text-amber-500 bg-amber-500/10 px-1.5 py-0.5 rounded border border-amber-500/20" title={`${outboxCount} offline changes queued`}>
+                                                {outboxCount} QUEUED
+                                            </span>
+                                        )}
+                                    </span>
                                 </span>
-                            </span>
-                            <span className="text-sm font-semibold text-foreground">
-                                {dayjs().format('ddd, MMM D')}
-                            </span>
-                        </div>
-                    )}
-                    {collapsed && (
-                        <div className="flex flex-col items-center justify-center w-full gap-2">
-                            {syncStatus === 'synced' && <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_#10b981] animate-pulse" />}
-                            {syncStatus === 'syncing' && <span className="w-2 h-2 rounded-full border border-t-transparent border-primary animate-spin" />}
-                            {syncStatus === 'offline-queued' && <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-bounce" />}
+                                <span className="text-sm font-semibold text-foreground">
+                                    {dayjs().format('ddd, MMM D')}
+                                </span>
+                            </div>
+                        )}
+                        {collapsed && (
+                            <div className="flex flex-col items-center justify-center w-full gap-2">
+                                {syncStatus === 'synced' && <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_#10b981] animate-pulse" />}
+                                {syncStatus === 'syncing' && <span className="w-2 h-2 rounded-full border border-t-transparent border-primary animate-spin" />}
+                                {syncStatus === 'offline-queued' && <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-bounce" />}
+                                <button
+                                    onClick={() => setCollapsed(false)}
+                                    className="p-1 rounded-md hover:bg-accent text-muted-foreground transition-colors mt-1"
+                                >
+                                    <ChevronRight className="w-3.5 h-3.5" />
+                                </button>
+                            </div>
+                        )}
+                        {!collapsed && (
                             <button
-                                onClick={() => setCollapsed(false)}
-                                className="p-1 rounded-md hover:bg-accent text-muted-foreground transition-colors mt-1"
+                                onClick={() => setCollapsed(true)}
+                                className="p-1.5 rounded-md hover:bg-accent text-muted-foreground transition-colors"
                             >
-                                <ChevronRight className="w-3.5 h-3.5" />
+                                <ChevronLeft className="w-4 h-4" />
+                            </button>
+                        )}
+                    </div>
+
+                    {/* Navigation */}
+                    <nav className="flex-1 px-2 py-3 space-y-1">
+                        {navItems.map(({ icon: Icon, label, path, isExit }) => (
+                            <React.Fragment key={path}>
+                                {isExit && <div className="mb-2" />}
+                                <NavLink
+                                    to={path}
+                                    className={({ isActive }) =>
+                                        `flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors ${isActive
+                                            ? 'bg-secondary text-secondary-foreground shadow-sm'
+                                            : 'text-muted-foreground hover:bg-accent hover:text-foreground'
+                                        } ${collapsed ? 'justify-center px-0' : ''}`
+                                    }
+                                    title={collapsed ? label : undefined}
+                                >
+                                    <Icon className={`w-4 h-4 flex-shrink-0 ${location.pathname === path ? 'text-primary' : 'text-muted-foreground/70'}`} />
+                                    {!collapsed && <span>{label}</span>}
+                                </NavLink>
+                                {isExit && <Separator className="my-2 opacity-50" />}
+                            </React.Fragment>
+                        ))}
+                    </nav>
+
+                    {/* Custom PWA Install Trigger */}
+                    {installPrompt && (
+                        <div className={collapsed ? 'px-2 mb-2 flex justify-center' : 'px-3 mb-2'}>
+                            <button
+                                onClick={triggerInstall}
+                                className={`w-full flex items-center justify-center gap-2 py-2 px-3 rounded-lg text-xs font-bold transition-all bg-primary/10 border border-primary/20 text-primary hover:bg-primary/20 cursor-pointer ${
+                                    collapsed ? 'p-2 justify-center w-auto' : ''
+                                }`}
+                                title="Install Life OS App"
+                            >
+                                <Download className="w-4 h-4 flex-shrink-0" />
+                                {!collapsed && <span>Install App</span>}
                             </button>
                         </div>
                     )}
-                    {!collapsed && (
-                        <button
-                            onClick={() => setCollapsed(true)}
-                            className="p-1.5 rounded-md hover:bg-accent text-muted-foreground transition-colors"
-                        >
-                            <ChevronLeft className="w-4 h-4" />
-                        </button>
-                    )}
-                </div>
 
-                {/* Navigation */}
-                <nav className="flex-1 px-2 py-3 space-y-1">
-                    {navItems.map(({ icon: Icon, label, path, isExit }) => (
-                        <React.Fragment key={path}>
-                            {isExit && <div className="mb-2" />}
-                            <NavLink
-                                to={path}
-                                className={({ isActive }) =>
-                                    `flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors ${isActive
-                                        ? 'bg-secondary text-secondary-foreground shadow-sm'
-                                        : 'text-muted-foreground hover:bg-accent hover:text-foreground'
-                                    } ${collapsed ? 'justify-center px-0' : ''}`
-                                }
-                                title={collapsed ? label : undefined}
-                            >
-                                <Icon className={`w-4 h-4 flex-shrink-0 ${location.pathname === path ? 'text-primary' : 'text-muted-foreground/70'}`} />
-                                {!collapsed && <span>{label}</span>}
-                            </NavLink>
-                            {isExit && <Separator className="my-2 opacity-50" />}
-                        </React.Fragment>
-                    ))}
-                </nav>
-
-                {/* Custom PWA Install Trigger */}
-                {installPrompt && (
-                    <div className={collapsed ? 'px-2 mb-2 flex justify-center' : 'px-3 mb-2'}>
-                        <button
-                            onClick={triggerInstall}
-                            className={`w-full flex items-center justify-center gap-2 py-2 px-3 rounded-lg text-xs font-bold transition-all bg-primary/10 border border-primary/20 text-primary hover:bg-primary/20 cursor-pointer ${
-                                collapsed ? 'p-2 justify-center w-auto' : ''
-                            }`}
-                            title="Install Life OS App"
-                        >
-                            <Download className="w-4 h-4 flex-shrink-0" />
-                            {!collapsed && <span>Install App</span>}
-                        </button>
-                    </div>
-                )}
-
-                {/* Streak Footer */}
-                <div className={`p-4 border-t border-border ${collapsed ? 'flex justify-center' : ''}`}>
-                    <div className="flex items-center gap-3">
-                        <div className={`p-2 rounded-lg bg-secondary/50 ${collapsed ? 'p-1.5' : ''}`}>
-                            <Flame className={`w-4 h-4 ${streak >= 7 ? 'text-orange-500 fill-orange-500 animate-pulse' : 'text-muted-foreground'}`} />
-                        </div>
-                        {!collapsed && (
-                            <div className="flex flex-col min-w-0">
-                                <div className="flex items-center gap-2">
-                                    <span className="text-sm font-bold truncate">{streak} Day Streak</span>
-                                    {streak >= 7 && <Badge variant="outline" className="h-4 px-1 text-[10px] border-orange-500 text-orange-500">PRO</Badge>}
-                                </div>
-                                <span className="text-[10px] text-muted-foreground uppercase tracking-wider font-bold opacity-50">No Reels</span>
+                    {/* Streak Footer */}
+                    <div className={`p-4 border-t border-border ${collapsed ? 'flex justify-center' : ''}`}>
+                        <div className="flex items-center gap-3">
+                            <div className={`p-2 rounded-lg bg-secondary/50 ${collapsed ? 'p-1.5' : ''}`}>
+                                <Flame className={`w-4 h-4 ${streak >= 7 ? 'text-orange-500 fill-orange-500 animate-pulse' : 'text-muted-foreground'}`} />
                             </div>
-                        )}
+                            {!collapsed && (
+                                <div className="flex flex-col min-w-0">
+                                    <div className="flex items-center gap-2">
+                                        <span className="text-sm font-bold truncate">{streak} Day Streak</span>
+                                        {streak >= 7 && <Badge variant="outline" className="h-4 px-1 text-[10px] border-orange-500 text-orange-500">PRO</Badge>}
+                                    </div>
+                                    <span className="text-[10px] text-muted-foreground uppercase tracking-wider font-bold opacity-50">No Reels</span>
+                                </div>
+                            )}
+                        </div>
                     </div>
-                </div>
-            </aside>
+                </aside>
+            )}
 
             {/* Mobile bottom nav capsule */}
             <div className="md:hidden fixed bottom-4 left-4 right-4 z-50 select-none">

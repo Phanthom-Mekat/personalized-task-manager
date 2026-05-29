@@ -21,7 +21,6 @@ import { Badge } from "@/components/ui/badge";
 const Navbar = () => {
     const { isDarkMode, toggleDarkMode } = useContext(ThemeContext);
     const { user, logOut } = useContext(AuthContext);
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [installPrompt, setInstallPrompt] = useState(null);
     const navigate = useNavigate();
 
@@ -170,38 +169,8 @@ const Navbar = () => {
                             </Link>
                         )}
 
-                        {/* Mobile Override */}
-                        <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => setIsMenuOpen(!isMenuOpen)}
-                            className="md:hidden rounded-xl h-10 w-10 text-muted-foreground hover:text-foreground"
-                        >
-                            {isMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-                        </Button>
                     </div>
                 </div>
-
-                {/* Mobile Buffer Navigation */}
-                {isMenuOpen && (
-                    <motion.div 
-                        initial={{ opacity: 0, y: -10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="md:hidden py-6 border-t border-border flex flex-col gap-6"
-                    >
-                        {renderNavLinks(() => setIsMenuOpen(false))}
-
-                        {installPrompt && (
-                            <Button
-                                onClick={triggerInstall}
-                                className="w-full flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl text-[10px] font-black uppercase tracking-widest bg-primary/10 border border-primary/20 text-primary hover:bg-primary/20 transition-all cursor-pointer"
-                            >
-                                <Download className="w-3.5 h-3.5" />
-                                <span>Install Standalone App</span>
-                            </Button>
-                        )}
-                    </motion.div>
-                )}
             </div>
         </nav>
     );

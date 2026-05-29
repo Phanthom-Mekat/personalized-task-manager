@@ -17,6 +17,8 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable"
 import { AuthContext } from "../provider/AuthProvider"
+import { Navigate } from "react-router-dom"
+import SkeletonLoader from "../components/ui/SkeletonLoader"
 import AddTaskForm from "../components/AddTaskForm"
 import TaskList from "../components/TaskList"
 import { 
@@ -33,7 +35,7 @@ import { Separator } from "@/components/ui/separator"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 
 function MainPage() {
-  const { user } = useContext(AuthContext)
+  const { user, loading } = useContext(AuthContext)
   const [tasks, setTasks] = useState({
     "To-Do": [],
     "In Progress": [],
@@ -181,26 +183,27 @@ function MainPage() {
     }
   }
 
-  if (!user) {
+  if (loading) {
     return (
-      <div className="min-h-[calc(100vh-80px)] flex items-center justify-center p-6 bg-background">
-        <motion.div 
-            initial={{ opacity: 0, scale: 0.98 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="w-full max-w-lg"
-        >
-            <Card className="bg-secondary/5 border-dashed border-border p-12 text-center group hover:border-primary/20 transition-all">
-                <div className="flex flex-col items-center gap-6">
-                    <div className="w-20 h-20 rounded-3xl bg-secondary/30 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
-                        <Shield className="w-10 h-10 opacity-40" />
-                    </div>
-                    <div className="space-y-3">
-                        <h2 className="text-3xl font-black text-foreground tracking-tighter uppercase">Initialize Protocol</h2>
-                        <p className="text-sm text-muted-foreground font-black uppercase tracking-widest opacity-40">Access Denied // Authentication Required</p>
-                    </div>
-                </div>
-            </Card>
-        </motion.div>
+      <div className="min-h-[calc(100vh-80px)] flex flex-col items-center justify-center bg-background">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+          <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/60 animate-pulse">Establishing Secure Uplink...</span>
+        </div>
+      </div>
+    )
+  }
+
+  if (!user) {
+    return <Navigate to="/auth/login" replace />
+  }
+
+  if (isLoading) {
+    return (
+      <div className="min-h-[calc(100vh-80px)] bg-background text-foreground">
+        <main className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
+          <SkeletonLoader type="tasks" />
+        </main>
       </div>
     )
   }
@@ -315,13 +318,6 @@ function MainPage() {
           </div>
         )}
 
-        {isLoading ? (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 py-12">
-            {[1, 2, 3].map(i => (
-                <div key={i} className="h-64 bg-secondary/10 border border-border/20 rounded-3xl animate-pulse" />
-            ))}
-          </div>
-        ) : (
           <DndContext
             sensors={sensors}
             collisionDetection={closestCorners}
@@ -363,7 +359,6 @@ function MainPage() {
               ) : null}
             </DragOverlay>
           </DndContext>
-        )}
       </main>
     </motion.div>
   )
