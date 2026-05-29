@@ -1,9 +1,10 @@
 import React, { useContext, useState } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
-import { Menu, X, Rocket, LayoutGrid, LogOut, Settings, User as UserIcon, Moon, Sun } from 'lucide-react';
+import { Menu, X, Rocket, LogOut, Settings, User as UserIcon, Moon, Sun } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { ThemeContext } from '../provider/ThemeProvider';
 import { AuthContext } from '../provider/AuthProvider';
+import Logo from './Logo';
 
 import { Button } from "@/components/ui/button";
 import { 
@@ -66,11 +67,11 @@ const Navbar = () => {
                     <div className="flex-shrink-0">
                         <Link to="/" className="flex items-center gap-2 sm:gap-3 group">
                             <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-primary flex items-center justify-center shadow-lg shadow-primary/20 transition-transform group-hover:scale-105 shrink-0">
-                                <LayoutGrid className="w-4 h-4 sm:w-5 sm:h-5 text-primary-foreground" />
+                                <Logo className="w-5 h-5 sm:w-6 sm:h-6 text-primary-foreground" />
                             </div>
                             <div className="flex flex-col">
                                 <span className="text-lg sm:text-xl font-black text-foreground tracking-tighter leading-none">LIFE OS</span>
-                                <span className="text-[8px] sm:text-[9px] font-black tracking-widest sm:tracking-[0.35em] text-muted-foreground opacity-40 uppercase leading-none mt-1">Industrial Logic</span>
+                                <span className="text-[8px] sm:text-[9px] font-black tracking-widest sm:tracking-[0.35em] text-muted-foreground opacity-40 uppercase leading-none mt-1">AI GPT Core</span>
                             </div>
                         </Link>
                     </div>

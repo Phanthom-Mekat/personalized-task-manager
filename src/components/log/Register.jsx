@@ -14,6 +14,7 @@ import { motion } from "framer-motion";
 
 import LottieLogin from '../../assets/login.json';
 import { AuthContext } from "../../provider/AuthProvider";
+import Logo from "../Logo";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
@@ -144,7 +145,7 @@ const Register = () => {
                     <CardContent className="p-6 md:p-10 space-y-4 md:space-y-6">
                         <header className="space-y-2">
                             <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary mb-6">
-                                <ShieldPlus className="w-6 h-6" />
+                                <Logo className="w-6 h-6" />
                             </div>
                             <h1 className="text-4xl font-black text-foreground tracking-tighter uppercase leading-tight">Create Node</h1>
                             <p className="text-[10px] font-black tracking-[0.2em] text-muted-foreground uppercase opacity-40">Establish a New Identity in the Grid</p>
