@@ -109,7 +109,7 @@ function BudgetCategoryList({
                                                 type="text"
                                                 value={cat?.name || ''}
                                                 onChange={(e) => onCategoryUpdate(idx, 'name', e.target.value)}
-                                                className="bg-transparent border-none text-base font-black uppercase tracking-tight focus:outline-none p-0 w-full"
+                                                className="bg-transparent border-none text-base font-black uppercase tracking-tight focus:outline-none p-0 w-full text-foreground"
                                             />
                                             {isOver ? (
                                                 <AlertTriangle className="w-3.5 h-3.5 text-red-500/60 flex-shrink-0 animate-pulse" />
@@ -141,7 +141,7 @@ function BudgetCategoryList({
                                                 type="number"
                                                 value={cat?.planned ?? ''}
                                                 onChange={(e) => onCategoryUpdate(idx, { ...cat, planned: parseFloat(e.target.value) || 0 })}
-                                                className="w-16 bg-transparent border-none text-sm font-mono font-black focus:outline-none text-right placeholder-transparent"
+                                                className="w-16 bg-transparent border-none text-sm font-mono font-black focus:outline-none text-right placeholder-transparent text-foreground"
                                             />
                                         </div>
                                     </div>
@@ -205,47 +205,51 @@ function BudgetCategoryList({
                         exit={{ opacity: 0, scale: 0.95 }}
                         className="rounded-2xl border border-dashed border-primary/30 bg-primary/5 p-5 mt-4"
                     >
-                        <div className="flex items-center gap-4">
-                            <button
-                                onClick={() => {
-                                    const idx = EMOJI_OPTIONS.indexOf(newEmoji);
-                                    setNewEmoji(EMOJI_OPTIONS[(idx + 1) % EMOJI_OPTIONS.length]);
-                                }}
-                                className="w-12 h-12 rounded-2xl bg-background border border-border flex items-center justify-center text-xl cursor-pointer hover:bg-secondary transition-all shadow-sm"
-                            >
-                                {newEmoji}
-                            </button>
-                            <div className="flex-1 space-y-1">
-                                <label className="text-[9px] font-black uppercase tracking-widest opacity-40 ml-0.5">New Category</label>
-                                <input
-                                    type="text"
-                                    value={newName}
-                                    onChange={(e) => setNewName(e.target.value)}
-                                    placeholder="e.g. Subscriptions"
-                                    className="w-full bg-transparent border-b border-border focus:border-primary text-sm font-black focus:outline-none transition-colors py-1"
-                                    autoFocus
-                                />
-                            </div>
-                            <div className="space-y-1">
-                                <label className="text-[9px] font-black uppercase tracking-widest opacity-40 ml-0.5">Budget</label>
-                                <div className="flex items-center border-b border-border focus-within:border-primary transition-colors py-1">
-                                    <span className="text-[10px] font-mono opacity-30">$</span>
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+                            <div className="flex items-center gap-4 flex-1 w-full">
+                                <button
+                                    onClick={() => {
+                                        const idx = EMOJI_OPTIONS.indexOf(newEmoji);
+                                        setNewEmoji(EMOJI_OPTIONS[(idx + 1) % EMOJI_OPTIONS.length]);
+                                    }}
+                                    className="w-12 h-12 rounded-2xl bg-background border border-border flex items-center justify-center text-xl cursor-pointer hover:bg-secondary transition-all shadow-sm shrink-0"
+                                >
+                                    {newEmoji}
+                                </button>
+                                <div className="flex-1 space-y-1">
+                                    <label className="text-[9px] font-black uppercase tracking-widest opacity-40 ml-0.5">New Category</label>
                                     <input
-                                        type="number"
-                                        value={newPlanned}
-                                        onChange={(e) => setNewPlanned(e.target.value)}
-                                        placeholder="0"
-                                        className="w-20 bg-transparent border-none text-sm font-mono font-black focus:outline-none text-right"
+                                        type="text"
+                                        value={newName}
+                                        onChange={(e) => setNewName(e.target.value)}
+                                        placeholder="e.g. Subscriptions"
+                                        className="w-full bg-transparent border-b border-border focus:border-primary text-sm font-black focus:outline-none transition-colors py-1 text-foreground"
+                                        autoFocus
                                     />
                                 </div>
                             </div>
-                            <div className="flex gap-2 self-end">
-                                <Button size="sm" onClick={handleAdd} className="h-9 px-4 text-[10px] font-black uppercase tracking-[0.15em] bg-primary text-primary-foreground shadow-lg shadow-primary/20">
-                                    Create
-                                </Button>
-                                <Button variant="ghost" size="sm" onClick={() => setShowAddRow(false)} className="h-9 w-9 p-0 rounded-xl">
-                                    <X className="w-4 h-4" />
-                                </Button>
+                            <div className="flex items-center gap-4 w-full sm:w-auto justify-between sm:justify-end">
+                                <div className="space-y-1 flex-1 sm:flex-initial">
+                                    <label className="text-[9px] font-black uppercase tracking-widest opacity-40 ml-0.5">Budget</label>
+                                    <div className="flex items-center border-b border-border focus-within:border-primary transition-colors py-1">
+                                        <span className="text-[10px] font-mono opacity-30">$</span>
+                                        <input
+                                            type="number"
+                                            value={newPlanned}
+                                            onChange={(e) => setNewPlanned(e.target.value)}
+                                            placeholder="0"
+                                            className="w-full sm:w-20 bg-transparent border-none text-sm font-mono font-black focus:outline-none text-right text-foreground"
+                                        />
+                                    </div>
+                                </div>
+                                <div className="flex gap-2 self-end pt-1">
+                                    <Button size="sm" onClick={handleAdd} className="h-9 px-4 text-[10px] font-black uppercase tracking-[0.15em] bg-primary text-primary-foreground shadow-lg shadow-primary/20">
+                                        Create
+                                    </Button>
+                                    <Button variant="ghost" size="sm" onClick={() => setShowAddRow(false)} className="h-9 w-9 p-0 rounded-xl">
+                                        <X className="w-4 h-4" />
+                                    </Button>
+                                </div>
                             </div>
                         </div>
                     </motion.div>

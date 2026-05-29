@@ -235,7 +235,7 @@ function MemoryVault({ apiCall }) {
                             placeholder="Search memory archive..."
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
-                            className="w-full bg-background border border-border/50 rounded-lg pl-9 pr-4 py-2 text-xs focus:outline-none focus:ring-1 focus:ring-violet-500/30"
+                            className="w-full bg-background border border-border/50 rounded-lg pl-9 pr-4 py-2 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-violet-500/30"
                         />
                     </div>
                     <div className="flex items-center gap-1 bg-background border border-border/50 rounded-lg px-2 text-xs">
@@ -243,10 +243,10 @@ function MemoryVault({ apiCall }) {
                         <select
                             value={categoryFilter}
                             onChange={(e) => setCategoryFilter(e.target.value)}
-                            className="bg-transparent border-none py-1 focus:outline-none cursor-pointer"
+                            className="bg-transparent border-none py-1 text-foreground focus:outline-none cursor-pointer"
                         >
                             {CATEGORIES.map(cat => (
-                                <option key={cat} value={cat}>{cat}</option>
+                                <option key={cat} value={cat} className="bg-card text-foreground">{cat}</option>
                             ))}
                         </select>
                     </div>
@@ -283,10 +283,10 @@ function MemoryVault({ apiCall }) {
                                                         <select
                                                             value={editCategory}
                                                             onChange={(e) => setEditCategory(e.target.value)}
-                                                            className="w-full bg-background border border-border/50 rounded-lg p-1.5 text-xs focus:outline-none"
+                                                            className="w-full bg-background border border-border/50 rounded-lg p-1.5 text-xs text-foreground focus:outline-none"
                                                         >
                                                             {CATEGORIES.filter(c => c !== 'All').map(c => (
-                                                                <option key={c} value={c}>{c}</option>
+                                                                <option key={c} value={c} className="bg-card text-foreground">{c}</option>
                                                             ))}
                                                         </select>
                                                     </div>
@@ -298,7 +298,7 @@ function MemoryVault({ apiCall }) {
                                                             max={10}
                                                             value={editImportance}
                                                             onChange={(e) => setEditImportance(Math.min(10, Math.max(1, Number(e.target.value))))}
-                                                            className="w-full bg-background border border-border/50 rounded-lg p-1.5 text-xs focus:outline-none"
+                                                            className="w-full bg-background border border-border/50 rounded-lg p-1.5 text-xs text-foreground focus:outline-none"
                                                         />
                                                     </div>
                                                 </div>
@@ -308,7 +308,7 @@ function MemoryVault({ apiCall }) {
                                                         value={editContent}
                                                         onChange={(e) => setEditContent(e.target.value)}
                                                         rows={2}
-                                                        className="w-full bg-background border border-border/50 rounded-lg p-2 text-xs focus:outline-none resize-none"
+                                                        className="w-full bg-background border border-border/50 rounded-lg p-2 text-xs text-foreground focus:outline-none resize-none"
                                                     />
                                                 </div>
                                                 <div className="flex justify-end gap-1.5">

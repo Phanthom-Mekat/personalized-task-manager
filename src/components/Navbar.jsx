@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
-import { Menu, X, Rocket, LogOut, Settings, User as UserIcon, Moon, Sun } from 'lucide-react';
+import { Menu, X, Rocket, LogOut, Settings, User as UserIcon, Moon, Sun, Download } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { ThemeContext } from '../provider/ThemeProvider';
 import { AuthContext } from '../provider/AuthProvider';
@@ -22,7 +22,41 @@ const Navbar = () => {
     const { isDarkMode, toggleDarkMode } = useContext(ThemeContext);
     const { user, logOut } = useContext(AuthContext);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [installPrompt, setInstallPrompt] = useState(null);
     const navigate = useNavigate();
+
+    React.useEffect(() => {
+        // Hydrate from global state if already set before component mount
+        if (window.deferredPrompt) {
+            setInstallPrompt(window.deferredPrompt);
+        }
+
+        const handlePromptAvailable = () => {
+            setInstallPrompt(window.deferredPrompt);
+        };
+        const handleInstalled = () => {
+            setInstallPrompt(null);
+        };
+
+        window.addEventListener('pwa-install-available', handlePromptAvailable);
+        window.addEventListener('pwa-installed', handleInstalled);
+
+        return () => {
+            window.removeEventListener('pwa-install-available', handlePromptAvailable);
+            window.removeEventListener('pwa-installed', handleInstalled);
+        };
+    }, []);
+
+    const triggerInstall = () => {
+        if (!installPrompt) return;
+        installPrompt.prompt();
+        installPrompt.userChoice.then((choiceResult) => {
+            if (choiceResult.outcome === 'accepted') {
+                setInstallPrompt(null);
+                window.deferredPrompt = null;
+            }
+        });
+    };
 
     const handleLogout = () => {
         logOut()
@@ -153,9 +187,19 @@ const Navbar = () => {
                     <motion.div 
                         initial={{ opacity: 0, y: -10 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="md:hidden py-6 border-t border-border"
+                        className="md:hidden py-6 border-t border-border flex flex-col gap-6"
                     >
                         {renderNavLinks(() => setIsMenuOpen(false))}
+
+                        {installPrompt && (
+                            <Button
+                                onClick={triggerInstall}
+                                className="w-full flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl text-[10px] font-black uppercase tracking-widest bg-primary/10 border border-primary/20 text-primary hover:bg-primary/20 transition-all cursor-pointer"
+                            >
+                                <Download className="w-3.5 h-3.5" />
+                                <span>Install Standalone App</span>
+                            </Button>
+                        )}
                     </motion.div>
                 )}
             </div>

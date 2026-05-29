@@ -391,7 +391,7 @@ function BudgetPlanner() {
                                 type="number"
                                 value={budgetData.income || ''}
                                 onChange={(e) => handleUpdate('income', parseFloat(e.target.value) || 0)}
-                                className="w-16 bg-transparent border-none text-[10px] font-mono font-bold focus:outline-none p-0"
+                                className="w-16 bg-transparent border-none text-[10px] font-mono font-bold focus:outline-none p-0 text-foreground dark:text-zinc-200"
                             />
                         </div>
                         {incomeSources.length > 0 && (
@@ -522,21 +522,21 @@ function BudgetPlanner() {
                         {/* RIGHT: Management */}
                         <div className="lg:col-span-4 space-y-8">
                             {/* Add Expense Form */}
-                            <Card className="bg-primary shadow-2xl shadow-primary/20 border-none p-5 text-primary-foreground relative overflow-hidden group rounded-3xl">
-                                <div className="absolute top-0 right-0 p-3 opacity-[0.07] pointer-events-none -rotate-12 scale-150 transition-transform group-hover:scale-125">
-                                    <Receipt className="w-28 h-28" />
+                            <Card className="bg-zinc-950 dark:bg-zinc-900/60 border border-zinc-800 dark:border-zinc-800/80 shadow-2xl p-5 text-zinc-100 relative overflow-hidden group rounded-3xl">
+                                <div className="absolute top-0 right-0 p-3 opacity-[0.05] pointer-events-none -rotate-12 scale-150 transition-transform group-hover:scale-125">
+                                    <Receipt className="w-28 h-28 text-white" />
                                 </div>
 
                                 <div className="relative z-10 space-y-4">
                                     <div>
-                                        <h2 className="text-sm font-black uppercase tracking-widest leading-none mb-0.5">Quick Ledger</h2>
-                                        <p className="text-[9px] font-bold opacity-50 uppercase tracking-wider">Record your spending</p>
+                                        <h2 className="text-sm font-black uppercase tracking-widest leading-none mb-0.5 text-zinc-100">Quick Ledger</h2>
+                                        <p className="text-[9px] font-bold text-zinc-500 uppercase tracking-wider">Record your spending</p>
                                     </div>
 
                                     {/* AI Quick Command Bar */}
                                     <div className="space-y-1 text-left">
-                                        <label className="text-[9px] font-black uppercase tracking-widest opacity-60 ml-0.5 flex items-center gap-1 text-white">
-                                            <Sparkles className="w-2.5 h-2.5" /> AI Quick Command
+                                        <label className="text-[9px] font-black uppercase tracking-widest text-zinc-400 ml-0.5 flex items-center gap-1">
+                                            <Sparkles className="w-2.5 h-2.5 text-primary" /> AI Quick Command
                                         </label>
                                         <div className="relative">
                                             <Input
@@ -544,17 +544,17 @@ function BudgetPlanner() {
                                                 value={aiQuery}
                                                 onChange={(e) => setAiQuery(e.target.value)}
                                                 onKeyDown={(e) => e.key === 'Enter' && handleAiParse(e)}
-                                                className="bg-primary-foreground/10 border-primary-foreground/20 text-white placeholder:text-white/30 h-9 pr-10 text-xs font-bold w-full"
+                                                className="bg-zinc-900/50 border-zinc-800 text-zinc-100 placeholder:text-zinc-500 focus:border-zinc-700 h-9 pr-10 text-xs font-bold w-full"
                                                 disabled={aiParsing}
                                             />
                                             <button
                                                 type="button"
                                                 onClick={handleAiParse}
                                                 disabled={aiParsing || !aiQuery.trim()}
-                                                className="absolute right-2 top-1/2 -translate-y-1/2 text-white opacity-70 hover:opacity-100 disabled:opacity-35 transition-opacity cursor-pointer flex items-center justify-center h-8 w-8"
+                                                className="absolute right-2 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-100 disabled:opacity-35 transition-colors cursor-pointer flex items-center justify-center h-8 w-8"
                                             >
                                                 {aiParsing ? (
-                                                    <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                                                    <div className="w-3.5 h-3.5 border-2 border-zinc-400 border-t-transparent rounded-full animate-spin" />
                                                 ) : (
                                                     <Sparkles className="w-3.5 h-3.5" />
                                                 )}
@@ -563,50 +563,50 @@ function BudgetPlanner() {
                                     </div>
 
                                     <div className="relative flex py-1 items-center">
-                                        <div className="flex-grow border-t border-white/10"></div>
-                                        <span className="flex-shrink mx-2 text-[8px] font-black uppercase tracking-widest opacity-35 text-white">Or manual input</span>
-                                        <div className="flex-grow border-t border-white/10"></div>
+                                        <div className="flex-grow border-t border-zinc-800"></div>
+                                        <span className="flex-shrink mx-2 text-[8px] font-black uppercase tracking-widest text-zinc-500">Or manual input</span>
+                                        <div className="flex-grow border-t border-zinc-800"></div>
                                     </div>
 
                                     <form onSubmit={handleAddExpense} className="space-y-3">
                                         <div className="grid grid-cols-2 gap-2.5">
                                             <div className="space-y-1">
-                                                <label className="text-[9px] font-black uppercase tracking-widest opacity-60 ml-0.5">Amount</label>
+                                                <label className="text-[9px] font-black uppercase tracking-widest text-zinc-400 ml-0.5">Amount</label>
                                                 <Input
                                                     type="number" step="0.01" placeholder="0.00"
                                                     value={entryAmount}
                                                     onChange={(e) => setEntryAmount(e.target.value)}
-                                                    className="bg-primary-foreground/10 border-primary-foreground/20 text-white placeholder:text-white/30 h-9 font-mono font-bold text-sm"
+                                                    className="bg-zinc-900/50 border-zinc-800 text-zinc-100 placeholder:text-zinc-500 focus:border-zinc-700 h-9 font-mono font-bold text-sm"
                                                     required
                                                 />
                                             </div>
                                             <div className="space-y-1">
-                                                <label className="text-[9px] font-black uppercase tracking-widest opacity-60 ml-0.5">Category</label>
+                                                <label className="text-[9px] font-black uppercase tracking-widest text-zinc-400 ml-0.5">Category</label>
                                                 <select
                                                     value={entryCategory}
                                                     onChange={(e) => setEntryCategory(e.target.value)}
-                                                    className="w-full h-9 bg-primary-foreground/10 border border-primary-foreground/20 rounded-md px-2.5 text-xs font-bold text-white focus:outline-none appearance-none cursor-pointer"
+                                                    className="w-full h-9 bg-zinc-900/50 border border-zinc-800 rounded-md px-2.5 text-xs font-bold text-zinc-100 focus:outline-none appearance-none cursor-pointer"
                                                     required
                                                 >
-                                                    <option value="" disabled className="text-zinc-500">Pick one...</option>
+                                                    <option value="" disabled className="text-zinc-500 bg-zinc-900">Pick one...</option>
                                                     {categories.map((c, i) => (
-                                                        <option key={i} value={c.name} className="text-black">{c.emoji} {c.name}</option>
+                                                        <option key={i} value={c.name} className="text-zinc-100 bg-zinc-900">{c.emoji} {c.name}</option>
                                                     ))}
                                                 </select>
                                             </div>
                                         </div>
                                         <div className="space-y-1">
-                                            <label className="text-[9px] font-black uppercase tracking-widest opacity-60 ml-0.5">Note</label>
+                                            <label className="text-[9px] font-black uppercase tracking-widest text-zinc-400 ml-0.5">Note</label>
                                             <Input
                                                 placeholder="e.g. Lunch, Coffee..."
                                                 value={entryNote}
                                                 onChange={(e) => setEntryNote(e.target.value)}
-                                                className="bg-primary-foreground/10 border-primary-foreground/20 text-white placeholder:text-white/30 h-9 font-bold text-xs"
+                                                className="bg-zinc-900/50 border-zinc-800 text-zinc-100 placeholder:text-zinc-500 focus:border-zinc-700 h-9 font-bold text-xs"
                                             />
                                         </div>
                                         <Button
                                             type="submit"
-                                            className="w-full h-10 bg-white text-primary hover:bg-zinc-100 font-black uppercase tracking-[0.15em] text-[10px] shadow-lg shadow-black/20 cursor-pointer rounded-xl"
+                                            className="w-full h-10 bg-white text-zinc-950 hover:bg-zinc-200 font-black uppercase tracking-[0.15em] text-[10px] shadow-lg shadow-black/20 cursor-pointer rounded-xl border-none"
                                         >
                                             Log Transaction <Plus className="w-3 h-3 ml-1.5" />
                                         </Button>

@@ -1,0 +1,25 @@
+{
+  "name": "Life OS | Strategic AI-Powered Productivity Core",
+  "short_name": "Life OS",
+  "description": "Strategic AI-Powered Productivity Core to fight screen-time and build healthy habits.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#090d16",
+  "theme_color": "#090d16",
+  "orientation": "portrait",
+  "categories": ["productivity", "utilities"],
+  "icons": [
+    {
+      "src": "/logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/logo-maskable.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ]
+}

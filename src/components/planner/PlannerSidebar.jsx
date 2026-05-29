@@ -12,7 +12,7 @@ import { Badge } from "@/components/ui/badge";
 import {
     Home, CalendarDays, TrendingUp, Target, CalendarRange,
     BookOpen, Wallet, NotebookPen, Map, ChevronLeft, ChevronRight, Flame, Rocket, Library,
-    MoreHorizontal, Brain
+    MoreHorizontal, Brain, Download
 } from 'lucide-react';
 
 const navItems = [
@@ -35,7 +35,41 @@ function PlannerSidebar() {
     const [collapsed, setCollapsed] = useState(false);
     const [streak, setStreak] = useState(0);
     const [isMoreOpen, setIsMoreOpen] = useState(false);
+    const [installPrompt, setInstallPrompt] = useState(null);
     const location = useLocation();
+
+    useEffect(() => {
+        // Hydrate from global state if already set before component mount
+        if (window.deferredPrompt) {
+            setInstallPrompt(window.deferredPrompt);
+        }
+
+        const handlePromptAvailable = () => {
+            setInstallPrompt(window.deferredPrompt);
+        };
+        const handleInstalled = () => {
+            setInstallPrompt(null);
+        };
+
+        window.addEventListener('pwa-install-available', handlePromptAvailable);
+        window.addEventListener('pwa-installed', handleInstalled);
+
+        return () => {
+            window.removeEventListener('pwa-install-available', handlePromptAvailable);
+            window.removeEventListener('pwa-installed', handleInstalled);
+        };
+    }, []);
+
+    const triggerInstall = () => {
+        if (!installPrompt) return;
+        installPrompt.prompt();
+        installPrompt.userChoice.then((choiceResult) => {
+            if (choiceResult.outcome === 'accepted') {
+                setInstallPrompt(null);
+                window.deferredPrompt = null;
+            }
+        });
+    };
 
     useEffect(() => {
         setIsMoreOpen(false);
@@ -130,6 +164,22 @@ function PlannerSidebar() {
                         </React.Fragment>
                     ))}
                 </nav>
+
+                {/* Custom PWA Install Trigger */}
+                {installPrompt && (
+                    <div className={collapsed ? 'px-2 mb-2 flex justify-center' : 'px-3 mb-2'}>
+                        <button
+                            onClick={triggerInstall}
+                            className={`w-full flex items-center justify-center gap-2 py-2 px-3 rounded-lg text-xs font-bold transition-all bg-primary/10 border border-primary/20 text-primary hover:bg-primary/20 cursor-pointer ${
+                                collapsed ? 'p-2 justify-center w-auto' : ''
+                            }`}
+                            title="Install Life OS App"
+                        >
+                            <Download className="w-4 h-4 flex-shrink-0" />
+                            {!collapsed && <span>Install App</span>}
+                        </button>
+                    </div>
+                )}
 
                 {/* Streak Footer */}
                 <div className={`p-4 border-t border-border ${collapsed ? 'flex justify-center' : ''}`}>
@@ -260,6 +310,23 @@ function PlannerSidebar() {
                                     </div>
                                 </div>
                             </div>
+
+                            {/* Custom Mobile PWA Install Trigger */}
+                            {installPrompt && (
+                                <motion.div
+                                    initial={{ opacity: 0, y: -10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    className="mb-6 shrink-0"
+                                >
+                                    <button
+                                        onClick={triggerInstall}
+                                        className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-2xl text-[10px] font-black uppercase tracking-widest bg-primary/10 border border-primary/20 text-primary hover:bg-primary/20 transition-all cursor-pointer"
+                                    >
+                                        <Download className="w-4 h-4" />
+                                        <span>Install Standalone App</span>
+                                    </button>
+                                </motion.div>
+                            )}
 
                             <div className="grid grid-cols-3 gap-4 pb-6 select-none">
                                 {[

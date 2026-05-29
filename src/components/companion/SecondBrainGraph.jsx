@@ -382,13 +382,13 @@ function SecondBrainGraph({ apiCall }) {
                                 <select
                                     value={edgeToNode}
                                     onChange={(e) => setEdgeToNode(e.target.value)}
-                                    className="w-full bg-background border border-border/50 rounded-lg p-2 text-xs focus:outline-none focus:ring-1 focus:ring-violet-500/30"
+                                    className="w-full bg-background border border-border/50 rounded-lg p-2 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-violet-500/30"
                                 >
-                                    <option value="">Select target entity...</option>
+                                    <option value="" className="bg-card text-foreground">Select target entity...</option>
                                     {nodes
                                         .filter(n => n.id !== selected.id)
                                         .map(n => (
-                                            <option key={n.id} value={n.id}>{n.label}</option>
+                                            <option key={n.id} value={n.id} className="bg-card text-foreground">{n.label}</option>
                                         ))}
                                 </select>
                             </div>
@@ -398,18 +398,18 @@ function SecondBrainGraph({ apiCall }) {
                                     placeholder="Relation label (e.g. Sister, Advisor)"
                                     value={edgeRelation}
                                     onChange={(e) => setEdgeRelation(e.target.value)}
-                                    className="w-full bg-background border border-border/50 rounded-lg p-2 text-xs focus:outline-none focus:ring-1 focus:ring-violet-500/30"
+                                    className="w-full bg-background border border-border/50 rounded-lg p-2 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-violet-500/30"
                                 />
                             </div>
                             <div className="flex items-center gap-2">
                                 <select
                                     value={edgeSentiment}
                                     onChange={(e) => setEdgeSentiment(e.target.value)}
-                                    className="flex-1 bg-background border border-border/50 rounded-lg p-2 text-xs focus:outline-none focus:ring-1 focus:ring-violet-500/30"
+                                    className="flex-1 bg-background border border-border/50 rounded-lg p-2 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-violet-500/30"
                                 >
-                                    <option value="Positive">Positive Sentiment</option>
-                                    <option value="Neutral">Neutral Sentiment</option>
-                                    <option value="Negative">Negative Sentiment</option>
+                                    <option value="Positive" className="bg-card text-foreground">Positive Sentiment</option>
+                                    <option value="Neutral" className="bg-card text-foreground">Neutral Sentiment</option>
+                                    <option value="Negative" className="bg-card text-foreground">Negative Sentiment</option>
                                 </select>
                                 <button
                                     type="submit"
@@ -448,7 +448,7 @@ function SecondBrainGraph({ apiCall }) {
                                         value={nodeLabel}
                                         onChange={(e) => setNodeLabel(e.target.value)}
                                         required
-                                        className="w-full bg-secondary/35 border border-border/50 rounded-lg p-2.5 text-xs focus:outline-none focus:ring-1 focus:ring-violet-500/30"
+                                        className="w-full bg-secondary/35 border border-border/50 rounded-lg p-2.5 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-violet-500/30"
                                     />
                                 </div>
                                 <div>
@@ -456,14 +456,14 @@ function SecondBrainGraph({ apiCall }) {
                                     <select
                                         value={nodeGroup}
                                         onChange={(e) => setNodeGroup(e.target.value)}
-                                        className="w-full bg-secondary/35 border border-border/50 rounded-lg p-2.5 text-xs focus:outline-none"
+                                        className="w-full bg-secondary/35 border border-border/50 rounded-lg p-2.5 text-xs text-foreground focus:outline-none"
                                     >
-                                        <option value="friend">Friend / Colleague</option>
-                                        <option value="family">Family Member</option>
-                                        <option value="work">Organization / Workplace</option>
-                                        <option value="education">School / University</option>
-                                        <option value="hobby">Hobby / Activity</option>
-                                        <option value="place">City / Place</option>
+                                        <option value="friend" className="bg-card text-foreground">Friend / Colleague</option>
+                                        <option value="family" className="bg-card text-foreground">Family Member</option>
+                                        <option value="work" className="bg-card text-foreground">Organization / Workplace</option>
+                                        <option value="education" className="bg-card text-foreground">School / University</option>
+                                        <option value="hobby" className="bg-card text-foreground">Hobby / Activity</option>
+                                        <option value="place" className="bg-card text-foreground">City / Place</option>
                                     </select>
                                 </div>
                                 <div>
@@ -473,7 +473,7 @@ function SecondBrainGraph({ apiCall }) {
                                         value={nodeDetails}
                                         onChange={(e) => setNodeDetails(e.target.value)}
                                         rows={3}
-                                        className="w-full bg-secondary/35 border border-border/50 rounded-lg p-2.5 text-xs focus:outline-none resize-none"
+                                        className="w-full bg-secondary/35 border border-border/50 rounded-lg p-2.5 text-xs text-foreground focus:outline-none resize-none"
                                     />
                                 </div>
                                 <div className="flex justify-end gap-2 pt-2 border-t border-border/30">

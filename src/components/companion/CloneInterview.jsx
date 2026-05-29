@@ -163,7 +163,7 @@ function CloneInterview({ apiCall, completeness, onProfileUpdate }) {
                                                     handleAnswer(q._id, customInputs[q._id].trim());
                                                 }
                                             }}
-                                            className="flex-1 bg-secondary/30 border border-border/40 rounded-lg px-3 py-2 text-xs placeholder:text-muted-foreground/30 focus:outline-none focus:ring-1 focus:ring-violet-500/30"
+                                            className="flex-1 bg-secondary/30 border border-border/40 rounded-lg px-3 py-2 text-xs text-foreground placeholder:text-muted-foreground/30 focus:outline-none focus:ring-1 focus:ring-violet-500/30"
                                         />
                                         <button
                                             onClick={() => {

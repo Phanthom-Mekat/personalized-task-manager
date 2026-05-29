@@ -119,11 +119,11 @@ function MonthlyPlanner() {
                                 placeholder="Core Focus..."
                                 value={monthlyData.theme || ''}
                                 onChange={(e) => handleUpdate('theme', e.target.value)}
-                                className="w-full text-xl sm:text-2xl md:text-3xl font-black bg-transparent border-none focus:outline-none placeholder:text-muted-foreground/30 text-foreground tracking-tight"
+                                className="w-full text-xl sm:text-2xl md:text-3xl font-black bg-transparent border-none focus:outline-none focus:ring-0 focus-visible:ring-0 outline-none placeholder:text-muted-foreground/30 text-foreground tracking-tight shadow-none"
                             />
                         </CardContent>
                     </Card>
-
+ 
                     {/* Top 3 High-Impact Goals */}
                     <Card className="bg-card shadow-none border-border rounded-[20px] sm:rounded-[24px]">
                         <CardHeader className="p-4 sm:p-6 border-b border-border/50">
@@ -144,7 +144,7 @@ function MonthlyPlanner() {
                                             value={monthlyData.goals?.[idx] || ''}
                                             onChange={(e) => handleGoalChange(idx, e.target.value)}
                                             rows={2}
-                                            className="w-full bg-transparent border-none text-xs sm:text-sm md:text-[15px] font-bold focus:outline-none resize-none placeholder:text-muted-foreground/30 text-foreground"
+                                            className="w-full bg-transparent border-none text-xs sm:text-sm md:text-[15px] font-bold focus:outline-none focus:ring-0 focus-visible:ring-0 outline-none resize-none placeholder:text-muted-foreground/30 text-foreground shadow-none"
                                         />
                                         <Separator className="bg-border/30 group-hover:bg-primary/20 transition-colors" />
                                     </div>
@@ -152,7 +152,7 @@ function MonthlyPlanner() {
                             ))}
                         </CardContent>
                     </Card>
-
+ 
                     {/* Vector Deep-Dives */}
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                         {[
@@ -161,7 +161,7 @@ function MonthlyPlanner() {
                             { id: 'personal', icon: Sparkles, color: 'text-indigo-500' }
                         ].map((area) => (
                             <Card key={area.id} className="bg-secondary/10 border-border shadow-none hover:bg-secondary/20 transition-colors rounded-[16px] sm:rounded-[20px]">
-                                <CardHeader className="p-4 pb-1.5">
+                                <CardHeader className="p-4 pb-1.5 text-left">
                                     <div className="flex items-center gap-2">
                                         <area.icon className={`w-3.5 h-3.5 ${area.color} opacity-70`} />
                                         <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60">{area.id} VECTOR</span>
@@ -172,7 +172,7 @@ function MonthlyPlanner() {
                                         placeholder={`Log...`}
                                         value={monthlyData.focusAreas?.[area.id] || ''}
                                         onChange={(e) => handleFocusChange(area.id, e.target.value)}
-                                        className="w-full bg-transparent text-xs font-bold focus:outline-none placeholder:text-muted-foreground/30 resize-none h-20 text-muted-foreground focus:text-foreground"
+                                        className="w-full bg-black/5 dark:bg-black/25 border border-border/40 dark:border-zinc-800 rounded-xl p-3 text-xs font-bold focus:outline-none focus:border-primary/45 dark:focus:border-zinc-700 focus:ring-1 focus:ring-primary/20 resize-none h-24 text-foreground placeholder:text-muted-foreground/30 transition-all text-left"
                                     />
                                 </CardContent>
                             </Card>
@@ -234,23 +234,23 @@ function MonthlyPlanner() {
                     </Card>
 
                     {/* Post-Interval Review */}
-                    <Card className="bg-primary shadow-lg shadow-primary/10 border-none rounded-[20px] sm:rounded-[24px] group relative overflow-hidden">
+                    <Card className="bg-[#09090b] dark:bg-zinc-950/40 border border-zinc-800 dark:border-zinc-850 shadow-lg text-zinc-100 rounded-[20px] sm:rounded-[24px] group relative overflow-hidden">
                          <div className="absolute top-0 right-0 p-4 opacity-10 -rotate-12 translate-x-2 -translate-y-2 group-hover:rotate-0 transition-transform">
-                            <Activity className="w-24 h-24 text-white" />
+                            <Activity className="w-24 h-24 text-white dark:text-zinc-100" />
                         </div>
-                        <CardHeader className="p-4 sm:p-6 pb-2 relative z-10">
-                            <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-white/50">Post-Interval Synthesis</span>
+                        <CardHeader className="p-4 sm:p-6 pb-2 relative z-10 text-left">
+                            <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-white/50 dark:text-zinc-400">Post-Interval Synthesis</span>
                         </CardHeader>
                         <CardContent className="p-4 sm:p-6 pt-0 relative z-10 space-y-4">
                             <textarea
-                                placeholder="SYNTHEZISING MONTHLY DATA..."
+                                placeholder="SYNTHESIZING MONTHLY DATA..."
                                 value={monthlyData.review || ''}
                                 onChange={(e) => handleUpdate('review', e.target.value)}
-                                className="w-full h-40 bg-white/10 rounded-xl p-3 sm:p-4 text-xs font-bold text-white placeholder:text-white/30 focus:outline-none border border-white/10 focus:border-white/20 transition-all scrollbar-hide"
+                                className="w-full h-40 bg-white/10 dark:bg-black/25 rounded-xl p-3 sm:p-4 text-xs font-bold text-white dark:text-zinc-100 placeholder:text-white/30 dark:placeholder:text-zinc-650 focus:outline-none border-none outline-none focus:ring-0 focus-visible:ring-0 shadow-none transition-all scrollbar-hide text-left"
                             />
                             <div className="flex items-center justify-between">
-                                <span className="text-[9px] font-black uppercase tracking-widest text-white/40 leading-none">Archival Protocol</span>
-                                <Bookmark className="w-3 h-3 text-white/30" />
+                                <span className="text-[9px] font-black uppercase tracking-widest text-white/40 dark:text-zinc-500 leading-none">Archival Protocol</span>
+                                <Bookmark className="w-3 h-3 text-white/30 dark:text-zinc-600" />
                             </div>
                         </CardContent>
                     </Card>

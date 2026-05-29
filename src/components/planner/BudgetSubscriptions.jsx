@@ -174,25 +174,27 @@ function BudgetSubscriptions({ subscriptions = [], totalIncome = 0, onUpdate }) 
                             ))}
                         </div>
 
-                        <div className="grid grid-cols-3 gap-2">
-                            <div className="space-y-1">
-                                <label className="text-[8px] font-black uppercase tracking-widest opacity-40">Name</label>
-                                <Input
-                                    placeholder="Netflix"
-                                    value={newName}
-                                    onChange={e => setNewName(e.target.value)}
-                                    className="h-8 text-xs font-bold bg-background/50"
-                                />
-                            </div>
-                            <div className="space-y-1">
-                                <label className="text-[8px] font-black uppercase tracking-widest opacity-40">Amount</label>
-                                <Input
-                                    type="number"
-                                    placeholder="15.99"
-                                    value={newAmount}
-                                    onChange={e => setNewAmount(e.target.value)}
-                                    className="h-8 text-xs font-mono font-bold bg-background/50"
-                                />
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                            <div className="grid grid-cols-2 gap-2 sm:col-span-2">
+                                <div className="space-y-1">
+                                    <label className="text-[8px] font-black uppercase tracking-widest opacity-40">Name</label>
+                                    <Input
+                                        placeholder="Netflix"
+                                        value={newName}
+                                        onChange={e => setNewName(e.target.value)}
+                                        className="h-8 text-xs font-bold bg-background/50"
+                                    />
+                                </div>
+                                <div className="space-y-1">
+                                    <label className="text-[8px] font-black uppercase tracking-widest opacity-40">Amount</label>
+                                    <Input
+                                        type="number"
+                                        placeholder="15.99"
+                                        value={newAmount}
+                                        onChange={e => setNewAmount(e.target.value)}
+                                        className="h-8 text-xs font-mono font-bold bg-background/50"
+                                    />
+                                </div>
                             </div>
                             <div className="space-y-1">
                                 <label className="text-[8px] font-black uppercase tracking-widest opacity-40">Cycle</label>

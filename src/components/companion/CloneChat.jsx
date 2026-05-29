@@ -347,7 +347,7 @@ function CloneChat({ apiCall, profile }) {
                         onKeyDown={handleKeyDown}
                         placeholder={isListening ? "Listening..." : "Talk to your companion…"}
                         rows={1}
-                        className="w-full resize-none bg-secondary/40 border border-border/50 rounded-xl px-4 py-3 pr-12 text-sm placeholder:text-muted-foreground/40 focus:outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500/40 transition-all"
+                        className="w-full resize-none bg-secondary/40 border border-border/50 rounded-xl px-4 py-3 pr-12 text-sm text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500/40 transition-all"
                         style={{ maxHeight: '120px' }}
                         onInput={(e) => {
                             e.target.style.height = 'auto';

@@ -131,3 +131,106 @@
         @apply font-sans;
     }
 }
+
+/* ==========================================================================
+   GLOBAL DARK MODE HIGHER-ORDER COMPATIBILITY LAYER
+   Gracefully adapts standard utility light mode classes (e.g. bg-white, 
+   text-zinc-900) to premium dark mode tones when .dark class is present on html.
+   ========================================================================== */
+
+.dark .bg-white {
+    background-color: var(--card) !important;
+}
+
+.dark .bg-zinc-50,
+.dark .bg-zinc-100,
+.dark .bg-gray-50,
+.dark .bg-gray-100,
+.dark .bg-slate-50,
+.dark .bg-slate-100,
+.dark .bg-neutral-50,
+.dark .bg-neutral-100 {
+    background-color: var(--secondary) !important;
+}
+
+.dark .text-black,
+.dark .text-zinc-950,
+.dark .text-zinc-900,
+.dark .text-zinc-800,
+.dark .text-zinc-700,
+.dark .text-gray-950,
+.dark .text-gray-900,
+.dark .text-gray-800,
+.dark .text-gray-700,
+.dark .text-slate-950,
+.dark .text-slate-900,
+.dark .text-slate-800,
+.dark .text-slate-700,
+.dark .text-neutral-950,
+.dark .text-neutral-900,
+.dark .text-neutral-800,
+.dark .text-neutral-700,
+.dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6 {
+    color: var(--foreground) !important;
+}
+
+.dark .text-zinc-650,
+.dark .text-zinc-600,
+.dark .text-zinc-505,
+.dark .text-zinc-500,
+.dark .text-zinc-400,
+.dark .text-gray-600,
+.dark .text-gray-500,
+.dark .text-gray-450,
+.dark .text-gray-400,
+.dark .text-slate-600,
+.dark .text-slate-500,
+.dark .text-slate-400,
+.dark .text-neutral-600,
+.dark .text-neutral-500,
+.dark .text-neutral-400 {
+    color: var(--muted-foreground) !important;
+}
+
+.dark .border-zinc-100,
+.dark .border-zinc-200,
+.dark .border-zinc-300,
+.dark .border-gray-100,
+.dark .border-gray-200,
+.dark .border-gray-300,
+.dark .border-slate-100,
+.dark .border-slate-200,
+.dark .border-slate-300,
+.dark .border-neutral-100,
+.dark .border-neutral-200,
+.dark .border-neutral-300,
+.dark .border,
+.dark .border-2 {
+    border-color: var(--border) !important;
+}
+
+.dark ::selection {
+    background-color: rgba(255, 255, 255, 0.15) !important;
+    color: var(--foreground) !important;
+}
+
+.dark [role="dialog"],
+.dark .dialog-content {
+    background-color: var(--background) !important;
+    color: var(--foreground) !important;
+    border-color: var(--border) !important;
+}
+
+.dark input,
+.dark textarea,
+.dark select {
+    color: var(--foreground) !important;
+    border-color: var(--border) !important;
+}
+
+.dark input::placeholder,
+.dark textarea::placeholder,
+.dark select::placeholder {
+    color: var(--muted-foreground) !important;
+    opacity: 0.6;
+}
