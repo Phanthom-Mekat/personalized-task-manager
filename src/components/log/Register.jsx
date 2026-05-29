@@ -1,65 +1,51 @@
-import { API_URL } from "../../config";
+import apiClient from "../../lib/apiClient";
+import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-
-import { useContext, useState } from "react";
 import { FaGoogle } from "react-icons/fa";
-import { Eye, EyeOff, Mail, Lock, User, Image, AlertCircle, DiamondPlus } from 'lucide-react';
+import { 
+    Eye, EyeOff, Mail, Lock, User, 
+    Image as ImageIcon, AlertCircle, 
+    ArrowRight, Fingerprint, 
+    UserPlus, ShieldPlus 
+} from 'lucide-react';
 import toast, { Toaster } from "react-hot-toast";
 import Lottie from "lottie-react";
+import { motion } from "framer-motion";
+
 import LottieLogin from '../../assets/login.json';
 import { AuthContext } from "../../provider/AuthProvider";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
 
 const Register = () => {
     const { createNewUser, setUser, updateUserProfile, signInWithGoogle } = useContext(AuthContext);
     const navigate = useNavigate();
     const [error, setError] = useState({});
     const [showPassword, setShowPassword] = useState(false);
-    const [isNameFocused, setIsNameFocused] = useState(false);
-    const [isEmailFocused, setIsEmailFocused] = useState(false);
-    const [isPhotoFocused, setIsPhotoFocused] = useState(false);
-    const [isPasswordFocused, setIsPasswordFocused] = useState(false);
 
     const validatePassword = (password) => {
-        if (password.length < 6) return "Password should be at least 6 characters";
-        if (!/[A-Z]/.test(password)) return "Password should have at least one uppercase letter";
-        if (!/[a-z]/.test(password)) return "Password should have at least one lowercase letter";
+        if (password.length < 6) return "Length Mismatch: Min 6 tokens";
+        if (!/[A-Z]/.test(password)) return "Security Gap: Missing uppercase";
+        if (!/[a-z]/.test(password)) return "Security Gap: Missing lowercase";
         return null;
     };
 
     const registerUserInDB = async (userData) => {
         try {
-            const response = await fetch(`${API_URL}/users`, {
-
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(userData)
-            });
-            
-            const data = await response.json();
-            
-            if (response.ok) {
-                if (data.message === 'User already exists') {
-                    toast.success("Welcome back!");
-                } else {
-                    toast.success("Registration successful!");
-                }
-                return true;
-            } else {
-                toast.error(data.message || "Registration failed");
-                return false;
-            }
-
+            const data = await apiClient.post("/users", userData);
+            toast.success(data.message === 'User already exists' ? "Welcome Back" : "Node Initialized");
+            return true;
         } catch (error) {
-            toast.error("Error connecting to server");
+            toast.error(error.message || "Internal Sync Error");
             return false;
         }
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
         const form = new FormData(e.target);
         const name = form.get("name");
         const email = form.get("email");
@@ -67,9 +53,8 @@ const Register = () => {
         const password = form.get("password");
 
         setError({});
-
         if (name.length < 3) {
-            setError({ name: "Name should be more than 3 characters" });
+            setError({ name: "Identifier too short" });
             return;
         }
 
@@ -83,7 +68,6 @@ const Register = () => {
             const result = await createNewUser(email, password);
             const user = result.user;
             setUser(user);
-
             await updateUserProfile({ displayName: name, photoURL: photo });
 
             const userData = {
@@ -94,9 +78,8 @@ const Register = () => {
                 role: 'student'
             };
 
-            const registered = await registerUserInDB(userData);
-            if (registered) {
-                navigate(location?.state ? location.state : "/");
+            if (await registerUserInDB(userData)) {
+                navigate("/");
             }
         } catch (err) {
             setError({ register: err.message });
@@ -117,185 +100,173 @@ const Register = () => {
                 role: 'student'
             };
 
-            const registered = await registerUserInDB(userData);
-            if (registered) {
-                navigate(location?.state ? location.state : "/");
+            if (await registerUserInDB(userData)) {
+                navigate("/");
             }
         } catch (err) {
-            console.error(err);
             setError({ google: err.message });
         }
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-white via-gray-50 to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-blue-900 flex flex-col md:flex-row items-center justify-center p-6 pb-10">
-            <div className="w-full md:w-1/2 max-w-md transform hover:scale-105 transition-transform duration-500">
-                <div className="w-full max-w-sm mx-auto relative">
-                    <div className="absolute inset-0 bg-gradient-to-r from-blue-100 to-purple-100 rounded-full filter blur-3xl opacity-30 animate-pulse"></div>
-                    <Lottie animationData={LottieLogin} loop={true} />
+        <div className="min-h-[calc(100vh-80px)] bg-background flex items-center justify-center p-6 relative overflow-hidden">
+            {/* Background Decorative Matrix */}
+            <div className="absolute inset-0 opacity-[0.02] pointer-events-none select-none">
+                <div className="grid grid-cols-12 h-full w-full">
+                    {Array.from({ length: 120 }).map((_, i) => (
+                        <div key={i} className="border-[0.5px] border-foreground p-8 flex items-center justify-center">
+                            <span className="text-[6px] font-mono opacity-20">{i.toString(16).padStart(4, '0')}</span>
+                        </div>
+                    ))}
                 </div>
             </div>
-            
-            <div className="w-full md:w-1/2 max-w-md z-10">
-            <div className="bg-white/80 dark:bg-gray-800 glass backdrop-blur-lg shadow-xl rounded-2xl p-8 w-full transform transition-all duration-300 hover:shadow-2xl">
-                    <h2 className="text-4xl font-bold text-center text-gray-800 mb-2">
-                        Create Account
-                    </h2>
-                    <p className="text-center text-gray-600 dark:text-gray-300 mb-8">Register to start your journey</p>
-                    
-                    <form onSubmit={handleSubmit} className="space-y-6">
-                        <div className="relative">
-                            <div className={`relative group ${isNameFocused ? 'focused' : ''}`}>
-                                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-700      
-                                dark:text-white
-                                group-hover:text-primary transition-colors duration-200" />
-                                <input
-                                    name="name"
-                                    type="text"
-                                    placeholder="Enter your name"
-                                    className="w-full pl-10 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200 bg-white/50 backdrop-blur-sm"
-                                    required
-                                    onChange={() => setError((prev) => ({ ...prev, name: null }))}
-                                    onFocus={() => setIsNameFocused(true)}
-                                    onBlur={() => setIsNameFocused(false)}
-                                />
-                                <label className="absolute left-10 -top-2.5 bg-white px-2 text-sm text-gray-600 transition-all duration-200">
-                                    Full Name
-                                </label>
+
+            <motion.div 
+               initial={{ opacity: 0, scale: 0.98 }}
+               animate={{ opacity: 1, scale: 1 }}
+               className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-12 items-center z-10"
+            >
+                {/* Visual Identity Block */}
+                <div className="hidden md:flex flex-col items-center justify-center space-y-8">
+                   <div className="relative w-full max-w-sm aspect-square">
+                        <div className="absolute inset-0 bg-primary/5 rounded-full blur-3xl" />
+                        <Lottie animationData={LottieLogin} loop={true} className="relative z-10 opacity-80" />
+                   </div>
+                   <div className="text-center space-y-3 px-12">
+                        <Badge variant="outline" className="px-3 py-0.5 rounded-full text-[9px] font-black uppercase tracking-widest border-primary/20 text-primary">Protocol v.4.0</Badge>
+                        <h2 className="text-3xl font-black text-foreground tracking-tighter uppercase leading-none">New Node Initialization</h2>
+                        <p className="text-xs text-muted-foreground font-medium uppercase tracking-[0.2em] opacity-40">Registering your unique vector within the global Life OS ecosystem.</p>
+                   </div>
+                </div>
+
+                {/* Registration Vault */}
+                <Card className="rounded-[32px] md:rounded-[40px] border-border bg-card/50 backdrop-blur-3xl shadow-2xl shadow-black/20 p-1 md:p-2 overflow-hidden">
+                    <CardContent className="p-6 md:p-10 space-y-4 md:space-y-6">
+                        <header className="space-y-2">
+                            <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary mb-6">
+                                <ShieldPlus className="w-6 h-6" />
                             </div>
-                            {error.name && (
-                                <div className="flex items-center gap-2 text-red-500 text-sm mt-1">
-                                    <AlertCircle className="w-4 h-4" />
-                                    <span>{error.name}</span>
+                            <h1 className="text-4xl font-black text-foreground tracking-tighter uppercase leading-tight">Create Node</h1>
+                            <p className="text-[10px] font-black tracking-[0.2em] text-muted-foreground uppercase opacity-40">Establish a New Identity in the Grid</p>
+                        </header>
+
+                        <form onSubmit={handleSubmit} className="space-y-4">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div className="space-y-1.5">
+                                    <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground ml-1 opacity-50">Identity Name</span>
+                                    <div className="relative group">
+                                        <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/30 group-focus-within:text-primary transition-colors" />
+                                        <Input
+                                            name="name"
+                                            placeholder="System User"
+                                            required
+                                            className="h-11 pl-11 rounded-xl bg-secondary/30 border-border text-xs focus:ring-4 focus:ring-primary/5 font-bold"
+                                        />
+                                    </div>
+                                    {error.name && <p className="text-[8px] font-black text-rose-500 uppercase tracking-widest ml-1">{error.name}</p>}
+                                </div>
+                                <div className="space-y-1.5">
+                                    <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground ml-1 opacity-50">Avatar Vector (URL)</span>
+                                    <div className="relative group">
+                                        <ImageIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/30 group-focus-within:text-primary transition-colors" />
+                                        <Input
+                                            name="photo"
+                                            type="url"
+                                            placeholder="https://..."
+                                            required
+                                            className="h-11 pl-11 rounded-xl bg-secondary/30 border-border text-[10px] focus:ring-4 focus:ring-primary/5 font-mono"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="space-y-1.5">
+                                <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground ml-1 opacity-50">Communication Hub (Email)</span>
+                                <div className="relative group">
+                                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/30 group-focus-within:text-primary transition-colors" />
+                                    <Input
+                                        name="email"
+                                        type="email"
+                                        placeholder="user@system.vector"
+                                        required
+                                        className="h-11 pl-11 rounded-xl bg-secondary/30 border-border font-mono text-xs focus:ring-4 focus:ring-primary/5"
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="space-y-1.5">
+                                <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground ml-1 opacity-50">Security Cipher</span>
+                                <div className="relative group">
+                                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/30 group-focus-within:text-primary transition-colors" />
+                                    <Input
+                                        name="password"
+                                        type={showPassword ? 'text' : 'password'}
+                                        placeholder="••••••••"
+                                        required
+                                        className="h-11 pl-11 pr-11 rounded-xl bg-secondary/30 border-border font-mono text-xs focus:ring-4 focus:ring-primary/5"
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowPassword(!showPassword)}
+                                        className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground opacity-20 hover:opacity-100 transition-opacity"
+                                    >
+                                        {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                                    </button>
+                                </div>
+                                {error.password && <p className="text-[8px] font-black text-rose-500 uppercase tracking-widest ml-1">{error.password}</p>}
+                            </div>
+
+                            {error.register && (
+                                <div className="flex items-center gap-3 text-rose-500 text-[10px] p-3 bg-rose-500/5 border border-rose-500/20 rounded-xl font-black uppercase tracking-widest">
+                                    <AlertCircle className="w-4 h-4 shrink-0" />
+                                    <span>{error.register}</span>
                                 </div>
                             )}
-                        </div>
 
-                        <div className="relative">
-                            <div className={`relative group ${isEmailFocused ? 'focused' : ''}`}>
-                                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-700 dark:text-white group-hover:text-primary transition-colors duration-200" />
-                                <input
-                                    name="email"
-                                    type="email"
-                                    placeholder="Enter your email"
-                                    className="w-full pl-10 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200 bg-white/50 backdrop-blur-sm"
-                                    required
-                                    onFocus={() => setIsEmailFocused(true)}
-                                    onBlur={() => setIsEmailFocused(false)}
-                                />
-                                <label className="absolute left-10 -top-2.5 bg-white px-2 text-sm text-gray-600 transition-all duration-200">
-                                    Email Address
-                                </label>
+                            <Button 
+                                type="submit"
+                                className="w-full h-12 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/10 flex items-center justify-center gap-3 group mt-4 overflow-hidden"
+                            >
+                                <span className="text-[11px] font-black uppercase tracking-[0.25em] relative z-10">Initialize Identity</span>
+                                <UserPlus className="w-4 h-4 relative z-10 transition-transform group-hover:scale-110" />
+                                <div className="absolute inset-0 bg-gradient-to-r from-primary via-primary-foreground/10 to-primary translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
+                            </Button>
+
+                            <div className="relative py-2">
+                                <div className="absolute inset-0 flex items-center">
+                                    <Separator className="w-full bg-border/50" />
+                                </div>
+                                <div className="relative flex justify-center text-[8px] font-black uppercase tracking-[0.3em] text-muted-foreground">
+                                    <span className="bg-card px-4 opacity-50">Federated Creation</span>
+                                </div>
                             </div>
-                        </div>
 
-                        <div className="relative">
-                            <div className={`relative group ${isPhotoFocused ? 'focused' : ''}`}>
-                                <Image className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-700 dark:text-white group-hover:text-primary transition-colors duration-200" />
-                                <input
-                                    name="photo"
-                                    type="url"
-                                    placeholder="Enter photo URL"
-                                    className="w-full pl-10 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200 bg-white/50 backdrop-blur-sm"
-                                    required
-                                    onFocus={() => setIsPhotoFocused(true)}
-                                    onBlur={() => setIsPhotoFocused(false)}
-                                />
-                                <label className="absolute left-10 -top-2.5 bg-white px-2 text-sm text-gray-600 transition-all duration-200">
-                                    Photo URL
-                                </label>
-                            </div>
-                        </div>
-
-                        <div className="relative">
-                            <div className={`relative group ${isPasswordFocused ? 'focused' : ''}`}>
-                                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-700 dark:text-white group-hover:text-primary transition-colors duration-200" />
-                                <input
-                                    name="password"
-                                    type={showPassword ? 'text' : 'password'}
-                                    placeholder="Enter your password"
-                                    className="w-full pl-10 pr-12 py-3 border-2 border-gray-200 rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200 bg-white/50 backdrop-blur-sm"
-                                    required
-                                    onChange={() => setError((prev) => ({ ...prev, password: null }))}
-                                    onFocus={() => setIsPasswordFocused(true)}
-                                    onBlur={() => setIsPasswordFocused(false)}
-                                />
-                                <button
-                                    type="button"
-                                    onClick={() => setShowPassword(!showPassword)}
-                                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                            <Button
+                                type="button"
+                                variant="outline"
+                                onClick={handleGoogleSignIn}
+                                className="w-full h-12 rounded-xl border-border bg-secondary/10 hover:bg-secondary/20 flex items-center justify-center gap-3 transition-all"
+                            >
+                                <FaGoogle className="text-primary" />
+                                <span className="text-[10px] font-black uppercase tracking-widest">Google Sync Protocol</span>
+                            </Button>
+                        </form>
+                        
+                        <footer className="text-center">
+                             <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-40">
+                                Existing Identity?{' '}
+                                <Link 
+                                    to="/auth/login" 
+                                    className="text-primary hover:underline"
                                 >
-                                    {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                                </button>
-                                <label className="absolute left-10 -top-2.5 bg-white px-2 text-sm text-gray-600 transition-all duration-200">
-                                    Password
-                                </label>
-                            </div>
-                            {error.password && (
-                                <div className="flex items-center gap-2 text-red-500 text-sm mt-1">
-                                    <AlertCircle className="w-4 h-4" />
-                                    <span>{error.password}</span>
-                                </div>
-                            )}
-                        </div>
-
-                        {error.register && (
-                            <div className="flex items-center gap-2 text-red-500 text-sm p-3 bg-red-50 rounded-lg">
-                                <AlertCircle className="w-5 h-5" />
-                                <span>{error.register}</span>
-                            </div>
-                        )}
-
-                        <button 
-                            type="submit"
-                            className="w-full bg-primary text-white py-3 px-4 rounded-xl hover:bg-primary-dark transform hover:-translate-y-0.5 transition-all duration-200 focus:ring-2 focus:ring-offset-2 focus:ring-primary focus:outline-none shadow-lg hover:shadow-xl"
-                        >
-                            <DiamondPlus className="w-6 h-6 inline mr-1" />
-                             Create Account
-                        </button>
-
-                        <div className="relative">
-                            <div className="absolute inset-0 flex items-center">
-                                <div className="w-full border-t border-gray-200"></div>
-                            </div>
-                            <div className="relative flex justify-center text-sm">
-                                <span className="px-4 bg-white text-gray-500">Or continue with</span>
-                            </div>
-                        </div>
-
-                        <button
-                            type="button"
-                            onClick={handleGoogleSignIn}
-                            className="w-full flex items-center justify-center gap-3 px-4 py-3 border-2 border-gray-200 rounded-xl hover:bg-gray-50 transform hover:-translate-y-0.5 transition-all duration-200 focus:ring-2 focus:ring-offset-2 focus:ring-gray-200 focus:outline-none bg-white/50 backdrop-blur-sm"
-                        >
-                            <FaGoogle className="text-xl text-primary" />
-                            <span className="text-gray-700 font-medium">Continue with Google</span>
-                        </button>
-                    </form>
-                    
-                    <p className="mt-8 text-center text-sm text-gray-600">
-                        Already have an account?{' '}
-                        <Link 
-                            to="/auth/login" 
-                            className="text-primary hover:text-primary-dark font-medium transition-colors"
-                        >
-                            Sign in
-                        </Link>
-                    </p>
-                </div>
-            </div>
-            <Toaster 
-                position="top-right"
-                toastOptions={{
-                    duration: 3000,
-                    style: {
-                        background: '#333',
-                        color: '#fff',
-                        borderRadius: '10px',
-                        padding: '16px',
-                    },
-                }}
-            />
+                                    Re-Access Vault
+                                </Link>
+                            </p>
+                        </footer>
+                    </CardContent>
+                </Card>
+            </motion.div>
+            <Toaster position="bottom-center" />
         </div>
     );
 };

@@ -3,7 +3,16 @@
 import { useDroppable } from "@dnd-kit/core";
 import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import Task from "./Task";
-import { ClipboardList } from "lucide-react";
+import { 
+    ClipboardList, Zap, Target, 
+    CheckCircle2, ChevronDown, Activity, 
+    Layers, Plus 
+} from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
 
 function TaskList({ category, tasks, onTaskUpdate }) {
   const { setNodeRef, isOver } = useDroppable({
@@ -14,81 +23,90 @@ function TaskList({ category, tasks, onTaskUpdate }) {
     },
   });
 
-  // Function to get background and border colors based on category, with dark variants
-  const getCategoryStyles = (category) => {
+  const getCategoryTheme = (category) => {
     switch (category) {
       case "To-Do":
-        return "bg-red-50 border-red-200 dark:bg-red-700 dark:border-red-700";
+        return { icon: Target, color: "text-rose-500", label: "Macro Pending" };
       case "In Progress":
-        return "bg-yellow-50 border-yellow-200 dark:bg-yellow-700 dark:border-yellow-700";
+        return { icon: Activity, color: "text-amber-500", label: "Active Vector" };
       case "Done":
-        return "bg-green-50 border-green-200 dark:bg-green-700 dark:border-green-700";
+        return { icon: CheckCircle2, color: "text-emerald-500", label: "Archive Secure" };
       default:
-        return "bg-gray-50 border-gray-200 dark:bg-gray-700 dark:border-gray-700";
+        return { icon: Layers, color: "text-primary", label: "General" };
     }
   };
 
-  // Function to get header text colors based on category, with dark variants
-  const getHeaderColor = (category) => {
-    switch (category) {
-      case "To-Do":
-        return "text-red-700 dark:text-red-300";
-      case "In Progress":
-        return "text-yellow-700 dark:text-yellow-300";
-      case "Done":
-        return "text-green-700 dark:text-green-300";
-      default:
-        return "text-gray-700 dark:text-gray-300";
-    }
-  };
+  const theme = getCategoryTheme(category);
 
   return (
-    <div 
-      className={`rounded-lg border ${getCategoryStyles(category)} p-4 shadow-sm transition-all ${
-        isOver ? "ring-2 ring-blue-400" : ""
+    <Card 
+      className={`rounded-3xl border-border bg-secondary/5 shadow-none group transition-all duration-300 flex flex-col h-full min-h-[500px] ${
+        isOver ? "bg-secondary/10 border-primary/30 ring-4 ring-primary/5" : "hover:border-primary/10"
       }`}
     >
-      <div className="mb-4 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <ClipboardList className={`h-5 w-5 ${getHeaderColor(category)}`} />
-          <h2 className={`font-semibold ${getHeaderColor(category)}`}>
-            {category}
-            <span className="ml-2 rounded-full bg-white dark:bg-gray-800 px-2 py-1 text-sm">
-              {tasks.length}
-            </span>
-          </h2>
+      <CardHeader className="p-6 pb-2">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className={`p-2 rounded-xl bg-background border border-border shadow-sm transition-transform group-hover:scale-105`}>
+              <theme.icon className={`h-4 w-4 ${theme.color} opacity-70`} />
+            </div>
+            <div className="flex flex-col">
+                <h2 className="text-sm font-black uppercase tracking-tight text-foreground">
+                    {category}
+                </h2>
+                <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground opacity-30 leading-none mt-1">
+                    {theme.label}
+                </span>
+            </div>
+          </div>
+          <Badge variant="outline" className="h-5 px-1.5 text-[9px] font-mono font-bold bg-background border-border text-muted-foreground opacity-60">
+             {tasks.length.toString().padStart(2, '0')}
+          </Badge>
         </div>
+      </CardHeader>
+
+      <div className="px-6 py-4">
+        <Separator className="bg-border/30" />
       </div>
 
-      <div
+      <CardContent
         ref={setNodeRef}
-        className={`min-h-[200px] rounded-md p-2 transition-colors ${
-          isOver ? "bg-white/50 dark:bg-gray-800/50" : "bg-white/30 dark:bg-gray-800/30"
+        className={`flex-1 p-4 pt-0 transition-colors rounded-b-3xl ${
+          isOver ? "bg-primary/[0.02]" : "bg-transparent"
         }`}
       >
-        {tasks.length === 0 ? (
-          <div className="flex h-[200px] items-center justify-center text-sm text-gray-500 dark:text-gray-400">
-            No tasks in this category
-          </div>
-        ) : (
-          <SortableContext
-            items={tasks.map(task => task._id)}
-            strategy={verticalListSortingStrategy}
-          >
-            <div className="space-y-2">
-              {tasks.map((task, index) => (
-                <Task
-                  key={task._id}
-                  task={task}
-                  index={index}
-                  onTaskUpdate={onTaskUpdate}
-                />
-              ))}
-            </div>
-          </SortableContext>
-        )}
-      </div>
-    </div>
+        <AnimatePresence mode="popLayout">
+          {tasks.length === 0 ? (
+            <motion.div 
+               initial={{ opacity: 0 }}
+               animate={{ opacity: 1 }}
+               className="flex h-[300px] flex-col items-center justify-center gap-4 opacity-10 group"
+            >
+              <div className="w-12 h-12 rounded-2xl border-2 border-dashed border-muted-foreground flex items-center justify-center group-hover:rotate-12 transition-transform">
+                <Plus className="w-6 h-6" />
+              </div>
+              <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Empty Matrix</p>
+            </motion.div>
+          ) : (
+            <SortableContext
+              items={tasks.map(task => task._id)}
+              strategy={verticalListSortingStrategy}
+            >
+              <div className="space-y-4">
+                {tasks.map((task, index) => (
+                  <Task
+                    key={task._id}
+                    task={task}
+                    index={index}
+                    onTaskUpdate={onTaskUpdate}
+                  />
+                ))}
+              </div>
+            </SortableContext>
+          )}
+        </AnimatePresence>
+      </CardContent>
+    </Card>
   );
 }
 

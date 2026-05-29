@@ -1,0 +1,6 @@
+{
+  "appId": "com.lifeos.planner",
+  "appName": "Life OS Planner",
+  "webDir": "dist",
+  "bundledWebRuntime": false
+}

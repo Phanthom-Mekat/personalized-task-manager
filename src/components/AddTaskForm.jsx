@@ -1,5 +1,19 @@
-import { useState } from "react"
-import { Plus, ListTodo } from "lucide-react"
+import React, { useState } from "react"
+import { Plus, ListTodo, ChevronDown, ChevronUp, Sparkles, Zap } from "lucide-react"
+import { motion, AnimatePresence } from "framer-motion"
+
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
+import { 
+    Select, 
+    SelectContent, 
+    SelectItem, 
+    SelectTrigger, 
+    SelectValue 
+} from "@/components/ui/select"
+import { Card, CardContent } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
 
 function AddTaskForm({ onAddTask }) {
   const [title, setTitle] = useState("")
@@ -19,68 +33,100 @@ function AddTaskForm({ onAddTask }) {
   }
 
   return (
-    <div className="rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-4 shadow-sm">
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="flex items-center gap-3">
-          <div className="rounded-lg bg-blue-50 dark:bg-blue-900 p-2">
-            <ListTodo className="h-5 w-5 text-blue-600 dark:text-blue-300" />
-          </div>
-          <input
-            type="text"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            onClick={() => setIsExpanded(true)}
-            placeholder="Add a new task..."
-            maxLength={50}
-            required
-            className="flex-1 border-none bg-transparent text-base text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-300 focus:outline-none focus:ring-0"
-          />
-        </div>
-
-        {isExpanded && (
-          <div className="space-y-4 pt-2">
-            <textarea
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder="Add a description..."
-              maxLength={200}
-              rows={3}
-              className="w-full rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 px-3 py-2 text-sm text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-300 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-            />
-
-            <div className="flex items-center gap-4">
-              <select
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-                className="rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 px-3 py-2 text-sm text-gray-900 dark:text-gray-100 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-              >
-                <option value="To-Do">To-Do</option>
-                <option value="In Progress">In Progress</option>
-                <option value="Done">Done</option>
-              </select>
-
-              <div className="flex gap-2">
-                <button
-                  type="button"
-                  onClick={() => setIsExpanded(false)}
-                  className="rounded-lg px-4 py-2 text-sm text-gray-500 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="flex items-center gap-1 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 dark:hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                >
-                  <Plus className="h-4 w-4" />
-                  Add Task
-                </button>
-              </div>
+    <Card className="rounded-3xl border-border bg-card shadow-sm shadow-black/5 overflow-hidden transition-all hover:shadow-md">
+      <CardContent className="p-0">
+        <form onSubmit={handleSubmit} className="divide-y divide-border/50">
+          {/* Primary Input Area */}
+          <div className="p-6 flex items-center gap-4">
+            <div className="w-10 h-10 rounded-xl bg-secondary/50 flex items-center justify-center text-primary opacity-50 shrink-0">
+              <Zap className="h-5 w-5" />
             </div>
+            <input
+              type="text"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              onClick={() => setIsExpanded(true)}
+              placeholder="Inject new task data..."
+              maxLength={50}
+              required
+              className="flex-1 bg-transparent border-none text-lg font-black text-foreground placeholder:text-muted-foreground/20 focus:outline-none focus:ring-0 uppercase tracking-tighter"
+            />
+            <Button 
+              type="button" 
+              variant="ghost" 
+              size="icon" 
+              onClick={() => setIsExpanded(!isExpanded)}
+              className="rounded-xl text-muted-foreground transition-transform duration-300"
+              style={{ transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)' }}
+            >
+              <ChevronDown className="h-5 w-5 opacity-40" />
+            </Button>
           </div>
-        )}
-      </form>
-    </div>
+
+          {/* Expanded Configuration Buffer */}
+          <AnimatePresence>
+            {isExpanded && (
+              <motion.div 
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: 'auto', opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.2, ease: "easeOut" }}
+                className="overflow-hidden"
+              >
+                <div className="p-6 space-y-6 bg-secondary/5">
+                  <div className="space-y-2">
+                    <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground opacity-50">Operational Context</span>
+                    <textarea
+                      value={description}
+                      onChange={(e) => setDescription(e.target.value)}
+                      placeholder="Add high-fidelity description..."
+                      maxLength={200}
+                      rows={3}
+                      className="w-full bg-background/50 border border-border rounded-xl px-4 py-3 text-sm font-bold text-foreground placeholder:text-muted-foreground/20 focus:border-primary/50 focus:outline-none focus:ring-4 focus:ring-primary/5 transition-all resize-none scrollbar-hide"
+                    />
+                  </div>
+
+                  <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <div className="flex items-center gap-2 w-full sm:w-auto">
+                        <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-30 mr-2">Status Vector</span>
+                        <Select value={category} onValueChange={(val) => setCategory(val)}>
+                            <SelectTrigger className="w-full sm:w-[160px] rounded-xl bg-background border-border text-[10px] font-black uppercase tracking-widest h-9">
+                                <SelectValue placeholder="To-Do" />
+                            </SelectTrigger>
+                            <SelectContent className="rounded-xl border-border">
+                                <SelectItem value="To-Do" className="text-[10px] font-black uppercase tracking-widest">TO-DO</SelectItem>
+                                <SelectItem value="In Progress" className="text-[10px] font-black uppercase tracking-widest">IN-PROGRESS</SelectItem>
+                                <SelectItem value="Done" className="text-[10px] font-black uppercase tracking-widest">DONE</SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </div>
+
+                    <div className="flex items-center gap-2 w-full sm:w-auto">
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        onClick={() => setIsExpanded(false)}
+                        className="flex-1 sm:flex-none h-10 rounded-xl px-6 text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:bg-white/5 hover:text-foreground"
+                      >
+                        Cancel
+                      </Button>
+                      <Button
+                        type="submit"
+                        className="flex-1 sm:flex-none h-10 rounded-xl px-8 flex items-center gap-2 bg-primary text-primary-foreground text-[10px] font-black uppercase tracking-widest shadow-lg shadow-primary/10 hover:bg-primary/90"
+                      >
+                        <Plus className="h-3.5 w-3.5" />
+                        Initialize Task
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </form>
+      </CardContent>
+    </Card>
   )
 }
 
-export default AddTaskForm
+export default AddTaskForm;

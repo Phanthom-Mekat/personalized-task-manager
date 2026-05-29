@@ -58,6 +58,18 @@ const AuthProvider = ({ children }) => {
     };
   
     useEffect(() => {
+      const e2eMockUser = localStorage.getItem("e2e-mock-user");
+      if (e2eMockUser) {
+        try {
+          const parsed = JSON.parse(e2eMockUser);
+          setUser(parsed);
+          setLoading(false);
+          return;
+        } catch (e) {
+          console.error("Failed to parse E2E mock user", e);
+        }
+      }
+
       const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
         setUser(currentUser);
         setLoading(false);

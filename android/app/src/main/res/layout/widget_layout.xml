@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="#0A0A0A"
+    android:backgroundTint="#0A0A0A">
+
+    <TextView
+        android:id="@+id/widget_status_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="🔥 FLAME ACTIVE"
+        android:textSize="9sp"
+        android:textStyle="bold"
+        android:textColor="#34D399" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="8dp">
+        
+        <TextView
+            android:id="@+id/widget_streak_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF" />
+            
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=" Days No Reels"
+            android:textSize="9sp"
+            android:textColor="#A1A1AA"
+            android:layout_gravity="center_vertical" />
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TODAY'S MISSION"
+        android:textSize="8sp"
+        android:textStyle="bold"
+        android:textColor="#71717A"
+        android:layout_marginTop="16dp" />
+
+    <TextView
+        android:id="@+id/widget_task_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Ship MERN Widgets"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:textColor="#FFFFFF"
+        android:layout_marginTop="2dp"
+        android:maxLines="2" />
+
+</LinearLayout>

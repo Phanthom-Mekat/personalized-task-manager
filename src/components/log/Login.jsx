@@ -1,13 +1,25 @@
-import { API_URL } from "../../config";
-import { useContext, useState } from "react";
-
+import apiClient from "../../lib/apiClient";
+import React, { useContext, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FaGoogle } from "react-icons/fa";
 import toast from "react-hot-toast";
 import Lottie from "lottie-react";
-import { Eye, EyeOff, Mail, Lock, AlertCircle, CheckCircle2, Milestone } from 'lucide-react';
-import LottieLogin from '../../assets/login.json'
+import { 
+    Eye, EyeOff, Mail, Lock, 
+    AlertCircle, CheckCircle2, 
+    Milestone, ShieldCheck, 
+    ArrowRight, Fingerprint, 
+    Hexagon
+} from 'lucide-react';
+import { motion } from "framer-motion";
+
+import LottieLogin from '../../assets/login.json';
 import { AuthContext } from "../../provider/AuthProvider";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
 
 const Login = () => {
     const { userLogin, setUser, signInWithGoogle, setEmail } = useContext(AuthContext);
@@ -28,30 +40,42 @@ const Login = () => {
         setSuccess(false);
         setError('');
         if (password.length < 6) {
-            setError('Password should be at least 6 characters');
+            setError('System Access Denied: Password length mismatch');
             return;
         }
         if (!/[A-Z]/.test(password)) {
-            setError('Password should have at least one uppercase letter');
-            return;
-        }
-        if (!/[a-z]/.test(password)) {
-            setError('Password should have at least one lowercase letter');
+            setError('Security Violation: Missing uppercase token');
             return;
         }
 
         userLogin(email, password)
-            .then((result) => {
+            .then(async (result) => {
                 const user = result.user;
+                
+                // Sync user to database incase they aren't there but exist in Firebase
+                const saveUser = {
+                    name: user.displayName || "Unknown",
+                    email: user.email,
+                    photo: user.photoURL || "",
+                    role: "student",
+                    uid: user.uid
+                };
+                
+                try {
+                    await apiClient.post("/users", saveUser);
+                } catch (syncError) {
+                    console.error("Auth sync failed", syncError);
+                }
+
                 setSuccess(true);
                 setUser(user);
-                toast.success('Signed in successfully.');
+                toast.success('Initialize Protocol Complete');
                 navigate(location?.state ? location.state : "/");
             })
             .catch((err) => {
                 setSuccess(false);
-                setError(err.message);
-                toast.error(`Invalid Password or User `);
+                setError('Unauthorized: Credentials invalid');
+                toast.error(`Authentication Failed`);
             });
     };
 
@@ -59,8 +83,6 @@ const Login = () => {
         signInWithGoogle()
             .then(async (result) => {
                 const loggedUser = result.user;
-                
-              
                 const saveUser = {
                     name: loggedUser.displayName,
                     email: loggedUser.email,
@@ -70,162 +92,149 @@ const Login = () => {
                 };
     
                 try {
-                    const response = await fetch(`${API_URL}/users`, {
-
-                        method: 'POST',
-                        headers: {
-                            'content-type': 'application/json'
-                        },
-                        body: JSON.stringify(saveUser)
-                    });
-    
-                    const data = await response.json();
-    
-                    if (response.ok || data.success) {
-                        setUser(loggedUser);
-                        toast.success('Signed in successfully with Google!');
-                        navigate(location?.state ? location.state : "/");
-                    } else {
-                        toast.error(data.message || 'Failed to save user data');
-                    }
-
+                    await apiClient.post("/users", saveUser);
+                    setUser(loggedUser);
+                    toast.success('External Proxy Connection Established');
+                    navigate(location?.state ? location.state : "/");
                 } catch (error) {
-                    toast.error('Error saving user data');
-                    console.error(error);
+                    toast.error('Sync Error');
                 }
             })
-            .catch((error) => {
-                toast.error('Google sign-in failed');
-                console.error(error);
-            });
-    };
-
-    const handleEmailChange = (e) => {
-        const email = e.target.value;
-        setEmail(email);
+            .catch(() => toast.error('Google Auth Failed'));
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-white via-gray-50 to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex flex-col md:flex-row items-center justify-center p-6">
-            <div className="w-full md:w-1/2 max-w-md transform hover:scale-105 transition-transform duration-500">
-                <div className="w-full max-w-sm mx-auto relative">
-                    <div className="absolute inset-0 bg-gradient-to-r from-blue-100 to-purple-100 rounded-full filter blur-3xl opacity-30 animate-pulse"></div>
-                    <Lottie animationData={LottieLogin} loop={true} />
+        <div className="min-h-[calc(100vh-80px)] bg-background flex items-center justify-center p-6 relative overflow-hidden">
+            {/* Background Decorative Matrix */}
+            <div className="absolute inset-0 opacity-[0.02] pointer-events-none select-none">
+                <div className="grid grid-cols-12 h-full w-full">
+                    {Array.from({ length: 120 }).map((_, i) => (
+                        <div key={i} className="border-[0.5px] border-foreground p-8 flex items-center justify-center">
+                            <span className="text-[6px] font-mono opacity-20">{i.toString(16).padStart(4, '0')}</span>
+                        </div>
+                    ))}
                 </div>
             </div>
-            
-            <div className="w-full md:w-1/2 max-w-md z-10">
-                <div className="bg-white/80 dark:bg-gray-800 glass backdrop-blur-lg shadow-xl rounded-2xl p-8 w-full transform transition-all duration-300 hover:shadow-2xl">
-                    <h2 className="text-4xl font-bold text-center text-gray-800 mb-2">
-                        Welcome Back
-                    </h2>
-                    <p className="text-center text-gray-600 dark:text-gray-300  mb-8">Sign in to continue your journey</p>
-                    
-                    <form onSubmit={handleSubmit} className="space-y-6">
-                        <div className="relative">
-                            <div className={`relative group ${isEmailFocused ? 'focused' : ''}`}>
-                                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-700 dark:text-gray-200 group-hover:text-primary transition-colors duration-200" />
-                                <input
-                                    name="email"
-                                    type="email"
-                                    placeholder="Enter your email"
-                                    className="w-full pl-10 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200 bg-white/50 backdrop-blur-sm"
-                                    required
-                                    onChange={handleEmailChange}
-                                    onFocus={() => setIsEmailFocused(true)}
-                                    onBlur={() => setIsEmailFocused(false)}
-                                />
-                                <label className="absolute left-10 -top-2.5 bg-white px-2 text-sm text-gray-600 transition-all duration-200">
-                                    Email Address
-                                </label>
-                            </div>
-                        </div>
 
-                        <div className="relative">
-                            <div className={`relative group ${isPasswordFocused ? 'focused' : ''}`}>
-                                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-700 dark:text-gray-200 group-hover:text-primary transition-colors duration-200" />
-                                <input
-                                    name="password"
-                                    type={showPassword ? 'text' : 'password'}
-                                    placeholder="Enter your password"
-                                    className="w-full pl-10 pr-12 py-3 border-2 border-gray-200 rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200 bg-white/50 backdrop-blur-sm"
-                                    required
-                                    onFocus={() => setIsPasswordFocused(true)}
-                                    onBlur={() => setIsPasswordFocused(false)}
-                                />
-                                <button
-                                    type="button"
-                                    onClick={() => setShowPassword(!showPassword)}
-                                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
-                                >
-                                    {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                                </button>
-                                <label className="absolute left-10 -top-2.5 bg-white px-2 text-sm text-gray-600 transition-all duration-200">
-                                    Password
-                                </label>
-                            </div>
-                        </div>
+            <motion.div 
+               initial={{ opacity: 0, y: 20 }}
+               animate={{ opacity: 1, y: 0 }}
+               className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-12 items-center z-10"
+            >
+                {/* Visual Identity Block */}
+                <div className="hidden md:flex flex-col items-center justify-center space-y-8">
+                   <div className="relative w-full max-w-sm aspect-square">
+                        <div className="absolute inset-0 bg-primary/5 rounded-full blur-3xl" />
+                        <Lottie animationData={LottieLogin} loop={true} className="relative z-10 opacity-80" />
+                   </div>
+                   <div className="text-center space-y-3 px-12">
+                        <Badge variant="outline" className="px-3 py-0.5 rounded-full text-[9px] font-black uppercase tracking-widest border-primary/20 text-primary">Secure Channel 0xAF</Badge>
+                        <h2 className="text-3xl font-black text-foreground tracking-tighter uppercase leading-none">Operational Intelligence</h2>
+                        <p className="text-xs text-muted-foreground font-medium uppercase tracking-[0.2em] opacity-40">Unifying fragmented task vectors into a singular strategic core.</p>
+                   </div>
+                </div>
 
-                        {success && (
-                            <div className="flex items-center gap-2 text-green-500 text-sm p-3 bg-green-50 rounded-lg">
-                                <CheckCircle2 className="w-5 h-5" />
-                                <span>Sign in successful!</span>
+                {/* Authentication Vault */}
+                <Card className="rounded-[32px] md:rounded-[40px] border-border bg-card/50 backdrop-blur-3xl shadow-2xl shadow-black/20 p-1 md:p-2 overflow-hidden">
+                    <CardContent className="p-6 md:p-10 space-y-6 md:space-y-8">
+                        <header className="space-y-2">
+                            <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary mb-6">
+                                <Fingerprint className="w-6 h-6" />
                             </div>
-                        )}
-                        {error && (
-                            <div className="flex items-center gap-2 text-red-500 text-sm p-3 bg-red-50 rounded-lg">
-                                <AlertCircle className="w-5 h-5" />
-                                <span>{error}</span>
-                            </div>
-                        )}
+                            <h1 className="text-4xl font-black text-foreground tracking-tighter uppercase leading-tight">Identity Access</h1>
+                            <p className="text-[10px] font-black tracking-[0.2em] text-muted-foreground uppercase opacity-40">System Login Required for Data Access</p>
+                        </header>
 
-                        <div className="flex justify-end">
-                            <Link 
-                                to="/auth/forgot" 
-                                className="text-sm text-primary hover:text-primary-dark transition-colors"
+                        <form onSubmit={handleSubmit} className="space-y-5">
+                            <div className="space-y-1.5">
+                                <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground mb-1 ml-1 opacity-50">Authorized Email</span>
+                                <div className="relative group">
+                                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/30 group-focus-within:text-primary transition-colors" />
+                                    <Input
+                                        name="email"
+                                        type="email"
+                                        placeholder="user@system.vector"
+                                        required
+                                        className="h-12 pl-12 rounded-2xl bg-secondary/30 border-border font-mono text-xs focus:ring-4 focus:ring-primary/5"
+                                        onChange={(e) => setEmail(e.target.value)}
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="space-y-1.5">
+                                <div className="flex justify-between items-center px-1">
+                                    <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground opacity-50">Cipher Key</span>
+                                    <Link to="/auth/forgot" className="text-[9px] font-black uppercase tracking-widest text-primary hover:underline">Lost Token?</Link>
+                                </div>
+                                <div className="relative group">
+                                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/30 group-focus-within:text-primary transition-colors" />
+                                    <Input
+                                        name="password"
+                                        type={showPassword ? 'text' : 'password'}
+                                        placeholder="••••••••"
+                                        required
+                                        className="h-12 pl-12 pr-12 rounded-2xl bg-secondary/30 border-border font-mono text-xs focus:ring-4 focus:ring-primary/5"
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowPassword(!showPassword)}
+                                        className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground opacity-20 hover:opacity-100 transition-opacity"
+                                    >
+                                        {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                                    </button>
+                                </div>
+                            </div>
+
+                            {error && (
+                                <div className="flex items-center gap-3 text-rose-500 text-[10px] p-4 bg-rose-500/5 border border-rose-500/20 rounded-2xl font-black uppercase tracking-widest">
+                                    <AlertCircle className="w-4 h-4 shrink-0" />
+                                    <span>{error}</span>
+                                </div>
+                            )}
+
+                            <Button 
+                                type="submit"
+                                className="w-full h-14 rounded-2xl bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/10 flex items-center justify-center gap-3 group overflow-hidden"
                             >
-                                Forgot password?
-                            </Link>
-                        </div>
+                                <span className="text-[11px] font-black uppercase tracking-[0.25em] relative z-10">Authorize Terminal</span>
+                                <ArrowRight className="w-4 h-4 relative z-10 transition-transform group-hover:translate-x-1" />
+                                <div className="absolute inset-0 bg-gradient-to-r from-primary via-primary-foreground/10 to-primary translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
+                            </Button>
 
-                        <button 
-                            type="submit"
-                            className="w-full bg-primary text-white py-3 px-4 rounded-xl hover:bg-primary-dark transform hover:-translate-y-0.5 transition-all duration-200 focus:ring-2 focus:ring-offset-2 focus:ring-primary focus:outline-none shadow-lg hover:shadow-xl"
-                        >
-                            <Milestone className="w-6 h-6 inline mr-1" />
-                            Sign In
-                        </button>
-
-                        <div className="relative">
-                            <div className="absolute inset-0 flex items-center">
-                                <div className="w-full border-t border-gray-200"></div>
+                            <div className="relative py-4">
+                                <div className="absolute inset-0 flex items-center">
+                                    <Separator className="w-full bg-border/50" />
+                                </div>
+                                <div className="relative flex justify-center text-[9px] font-black uppercase tracking-widest text-muted-foreground">
+                                    <span className="bg-card px-4">Federated Entry</span>
+                                </div>
                             </div>
-                            <div className="relative flex justify-center text-sm">
-                                <span className="px-4 bg-white text-gray-500">Or continue with</span>
-                            </div>
-                        </div>
 
-                        <button
-                            type="button"
-                            onClick={handleGoogleSignIn}
-                            className="w-full flex items-center justify-center gap-3 px-4 py-3 border-2 border-gray-200 rounded-xl hover:bg-gray-50 transform hover:-translate-y-0.5 transition-all duration-200 focus:ring-2 focus:ring-offset-2 focus:ring-gray-200 focus:outline-none bg-white/50 backdrop-blur-sm"
-                        >
-                            <FaGoogle className="text-xl text-primary" />
-                            <span className="text-gray-700 font-medium">Continue with Google</span>
-                        </button>
-                    </form>
-                    
-                    <p className="mt-8 text-center text-sm text-gray-600">
-                        Dont have an account?{' '}
-                        <Link 
-                            to="/auth/register" 
-                            className="text-primary hover:text-primary-dark font-medium transition-colors"
-                        >
-                            Create an account
-                        </Link>
-                    </p>
-                </div>
-            </div>
+                            <Button
+                                type="button"
+                                variant="outline"
+                                onClick={handleGoogleSignIn}
+                                className="w-full h-14 rounded-2xl border-border bg-secondary/10 hover:bg-secondary/20 flex items-center justify-center gap-3 transition-all"
+                            >
+                                <FaGoogle className="text-primary" />
+                                <span className="text-[10px] font-black uppercase tracking-widest">Google Auth Protocol</span>
+                            </Button>
+                        </form>
+                        
+                        <footer className="text-center pt-2">
+                             <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-40">
+                                Unregistered Entity?{' '}
+                                <Link 
+                                    to="/auth/register" 
+                                    className="text-primary hover:underline"
+                                >
+                                    Create New Node
+                                </Link>
+                            </p>
+                        </footer>
+                    </CardContent>
+                </Card>
+            </motion.div>
         </div>
     );
 };

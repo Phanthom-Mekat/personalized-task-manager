@@ -1,12 +1,13 @@
 import { Outlet } from "react-router-dom";
 import Navbar from "../components/Navbar";
 
-
 const MainLayout = () => {
     return ( 
-        <div className="dark:bg-gray-900 " >
+        <div className="min-h-screen bg-background text-foreground font-sans selection:bg-primary/10 transition-colors duration-300" >
             <Navbar/>
-            <Outlet/>
+            <main className="relative z-10 pt-20">
+                <Outlet/>
+            </main>
         </div>
     );
 };

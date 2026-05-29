@@ -43,7 +43,7 @@ npm install dayjs react-circular-progressbar react-confetti framer-motion
     ]
   },
   
-  monthly: [               // 6 entries, one per month
+  monthly: [
     {
       month: Number,        // 1–12
       year: Number,
@@ -526,3 +526,24 @@ The app has solved its purpose if, after 2 weeks of use, the user's Growth Track
 - Increasing `noReels` streak
 - Increasing `productivityScore`
 - Decreasing `screenTime`
+
+---
+
+## 🛠️ BUDGET PLANNER REFACTORING PROGRESS
+
+- [x] **Backend Controller Refactoring**
+    - [x] Implement server-side category recalculation helper
+    - [x] Refactor `addDailyBudgetEntry` and `deleteBudgetEntry`
+    - [x] Integrate validators for new income sources
+- [x] **Frontend State Management Cleanup**
+    - [x] Remove client-side total recalculations
+    - [x] Update `BudgetPlanner.jsx` to reflect aggregated income
+- [x] **UI Component Modernization**
+    - [x] Create `BudgetIncomeSourceList.jsx` for multi-stream tracking
+    - [x] Enhance `BudgetCategoryList.jsx` with progress bars and income-share %
+    - [x] Fix `BudgetPlanner.jsx` layout for better data hierarchy
+- [x] **UX Refinement & Polish**
+    - [x] Final premium touches to `BudgetLedger.jsx`
+    - [x] Real-time category health alerts and pulse animations
+- [x] **Verification**
+    - [x] Full integration of multi-income sources and backend-driven totals
