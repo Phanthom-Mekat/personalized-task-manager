@@ -101,3 +101,37 @@ self.addEventListener('fetch', (event) => {
       })
   );
 });
+
+// 4. Notification Click event: Intercept background "quick-ping" actions and hit API silently
+self.addEventListener('notificationclick', (event) => {
+  const notification = event.notification;
+  const action = event.action;
+  
+  if (action === 'quick-ping') {
+    const { userId, contactId, apiUrl } = notification.data;
+    const baseUrl = apiUrl || ''; // Dynamically use the origin passed from the main application thread
+    
+    // Background fetch to silently log interaction and restore vitality
+    event.waitUntil(
+      fetch(`${baseUrl}/api/contacts/${userId}/${contactId}/ping`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ summary: 'Recharged silently from lock-screen notification.' })
+      })
+      .then(() => {
+        console.log('[Service Worker] Silently recharged contact:', contactId);
+        notification.close();
+      })
+      .catch((err) => {
+        console.error('[Service Worker] Silent recharge failed:', err);
+        notification.close();
+      })
+    );
+  } else {
+    // Standard notification click opens the CRM application page
+    notification.close();
+    event.waitUntil(
+      clients.openWindow('/planner/social')
+    );
+  }
+});

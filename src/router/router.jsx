@@ -16,6 +16,7 @@ import PlannerCalendar from "../pages/Planner/PlannerCalendar";
 import RoadmapPlanner from "../pages/Planner/RoadmapPlanner";
 import LibraryIndex from "../pages/Planner/Library";
 import CompanionVault from "../pages/Planner/CompanionVault";
+import SocialCRM from "../pages/Planner/SocialCRM";
 import ProtectedRoute from "../components/ProtectedRoute";
 
 const router = createBrowserRouter([
@@ -46,6 +47,7 @@ const router = createBrowserRouter([
             { path: "library", element: <LibraryIndex /> },
             { path: "calendar", element: <PlannerCalendar /> },
             { path: "companion", element: <CompanionVault /> },
+            { path: "social", element: <SocialCRM /> },
         ],
     },
     {

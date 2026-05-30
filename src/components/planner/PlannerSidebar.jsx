@@ -12,7 +12,7 @@ import { Badge } from "@/components/ui/badge";
 import {
     Home, CalendarDays, TrendingUp, Target, CalendarRange,
     BookOpen, Wallet, NotebookPen, Map, ChevronLeft, ChevronRight, Flame, Rocket, Library,
-    MoreHorizontal, Brain, Download
+    MoreHorizontal, Brain, Download, Network
 } from 'lucide-react';
 
 const navItems = [
@@ -28,6 +28,7 @@ const navItems = [
     { icon: Library, label: 'Library', path: '/planner/library' },
     { icon: Map, label: 'Calendar', path: '/planner/calendar' },
     { icon: Brain, label: 'AI Companion', path: '/planner/companion' },
+    { icon: Network, label: 'Social Graph', path: '/planner/social' },
 ];
 
 function PlannerSidebar() {
@@ -340,6 +341,7 @@ function PlannerSidebar() {
                                     { icon: Library, label: 'Library', path: '/planner/library' },
                                     { icon: Map, label: 'Calendar', path: '/planner/calendar' },
                                     { icon: Brain, label: 'AI Twin', path: '/planner/companion' },
+                                    { icon: Network, label: 'Social Graph', path: '/planner/social' },
                                 ].map(({ icon: Icon, label, path }) => {
                                     const isActive = location.pathname === path;
                                     return (
